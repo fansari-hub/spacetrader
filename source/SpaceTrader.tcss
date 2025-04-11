@@ -1,0 +1,36 @@
+Bar > .bar--indeterminate {
+    color: $primary;
+    background: $secondary;
+}
+
+Bar > .bar--bar {
+    color: $primary;
+    background: $primary 30%;
+}
+
+Bar > .bar--complete {
+    color: $error;
+}
+
+ShipStats, ShipControls {
+    border: solid green;
+    padding: 0;
+    width: 53;
+    height: 12;
+    align: center middle;
+
+}
+
+Button {
+    margin: 1;
+    border: none;
+    text-style: none;
+    height: 2;
+}
+
+Switch {
+    margin: 1 1;
+    padding: 0;
+    border: none;
+    height: 1;
+}
