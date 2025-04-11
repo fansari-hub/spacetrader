@@ -34,3 +34,21 @@ Switch {
     border: none;
     height: 1;
 }
+
+ShipLog{
+    border: solid green;
+    padding: 0;
+    width: 106;
+}
+
+ShipComms{
+    border: solid green;
+    padding: 0;
+    width: 106;
+    align: center middle;
+}
+
+Log{
+    height: 10;
+    scrollbar-size: 0 1;
+}
