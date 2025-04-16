@@ -4,10 +4,11 @@ from ..ShipLog.ShipLog import ShipLog
 
 class TableList(VerticalGroup):
 
-    def __init__(self, id=None, headers=("Column1", "Columns2", "Column3"), data=[("Data", "Not", "Set")], title=None):
+    def __init__(self, id=None, headers=("Column1", "Columns2", "Column3"), data=[("Data", "Not", "Set")], title=None, callback=None):
         self.headers = headers
         self.data = data
         self.title = title
+        self.callback = callback
         super().__init__(id=id)
 
     def compose(self):
@@ -20,15 +21,16 @@ class TableList(VerticalGroup):
             yield Button("Cancel", id="btn_cmd_cancel", variant="error")
     
     def on_mount(self):
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Opened interface -> " + self.title)    
+        #get_log = self.app.query_one(ShipLog)
+        #get_log.update_log("Opened interface -> " + self.title)    
         table = self.query_one("#datatable")
         table.add_columns(*self.headers)
         table.add_rows(self.data)
 
     def on_unmount(self):
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Closed interface -> " + self.title)       
+        #get_log = self.app.query_one(ShipLog)
+        #get_log.update_log("Closed interface -> " + self.title)
+        pass
 
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -37,7 +39,9 @@ class TableList(VerticalGroup):
             case "btn_cmd_confirm":
                 get_log = self.app.query_one(ShipLog)
                 table = self.query_one("#datatable")
-                get_log.update_log(f"{self.title} -> {table.cursor_coordinate}")    
+                #get_log.update_log(f"{self.title} -> {table.cursor_coordinate}")    
+                if self.callback:
+                        self.callback(table.get_cell_at((table.cursor_coordinate.row, 0)))    
                 self.remove()
             case "btn_cmd_cancel":
                 self.remove()         

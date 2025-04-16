@@ -48,33 +48,59 @@ class ShipControls(HorizontalGroup):
         get_log = self.app.query_one(ShipLog)
         get_log.update_log("Started Long Range Scanner...")
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_loadbar(label="Long Range Scanner", animation_interval=25)
+        get_viewport.present_loadbar(label="Long Range Scanner", targetvalue=100, animation_interval=25, callback=self.behaviour_longrange)
         
 
     def action_btn_shortrange(self) -> None:
         get_log = self.app.query_one(ShipLog)
         get_log.update_log("Started Short Range Scanner...")
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_loadbar(label="Short Range Scanner", animation_interval=50)
+        get_viewport.present_loadbar(label="Short Range Scanner", targetvalue=100, animation_interval=50, callback=self.behaviour_shortrange)
 
     def action_btn_localdest(self) -> None:
-        headers = ["Option1", "Option2", "Option3"]
-        data = [("Value1", "Value2", "Value3")]
+        headers = ["#", "Name", "Type", "Distance"]
+        data = [("1", "Jupitor", "Planet", "1,000,000 KM"),
+                ("2", "Arkanos", "Space Station", "2000 KM")
+                ]
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="Local Destination")        
+        get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="Local Destination", callback=self.behaviour_localdest)        
 
     def action_btn_jump(self) -> None:
-        headers = ["Option1", "Option2", "Option3"]
-        data = [("Value1", "Value2", "Value3")]
+        headers = ["#", "Name", "Distance"]
+        data = [("1", "Alpha Century", "5.0 Parsecs")]
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="System Jump Destination")          
+        get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="System Jump Destination", callback=self.behaviour_jump)          
 
     def action_btn_dock(self) -> None:
         option_list = ["Option1", "Option2", "Option3"]
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_options(id="longrange_list", option_values=option_list, title="Land or Dock Target")        
+        get_viewport.present_options(id="longrange_list", option_values=option_list, title="Land or Dock Target", callback=self.behaviour_dock)        
 
     def action_btn_extract(self) -> None:
         option_list = ["Option1", "Option2", "Option3"]
         get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_options(id="longrange_list", option_values=option_list, title="Extract Resource")        
+        get_viewport.present_options(id="longrange_list", option_values=option_list, title="Extract Resource", callback=self.behaviour_extract)
+
+    def behaviour_dock(self, text) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Docked with " + text)
+
+    def behaviour_extract(self, text) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Extracted some " + text)      
+
+    def behaviour_shortrange(self) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Short Range Scan Complete")
+
+    def behaviour_longrange(self) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Long Range Scan Complete")   
+
+    def behaviour_jump(self, text) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Selected jump destination: " + text)   
+
+    def behaviour_localdest(self, text) -> None:
+        get_log = self.app.query_one(ShipLog)
+        get_log.update_log("Callback: Selected local destination: " + text)           

@@ -7,11 +7,12 @@ from textual.timer import Timer
 class StatusBar(HorizontalGroup):
     progress_timer : Timer
 
-    def __init__(self, valueInt, labelStr, totalInt = 100, id=None, animation_interval=100):
+    def __init__(self, valueInt, labelStr, totalInt = 100, id=None, animation_interval=100, callback=None):
         self.start_value = valueInt
         self.labelStr = labelStr
         self.totalInt = totalInt
         self.animation_interval = animation_interval
+        self.callback = callback
         super().__init__(id=id)
 
     def compose(self):
@@ -30,7 +31,7 @@ class StatusBar(HorizontalGroup):
 
     def update_value(self, newValueInt) -> None:
         self.target_value = newValueInt
-        self.newValueTimer = self.set_interval(1 / 100, self.smooth_value_update, pause=False)
+        self.newValueTimer = self.set_interval(1 / self.animation_interval, self.smooth_value_update, pause=False)
 
     def smooth_value_update(self) -> None:
         if self.query_one(ProgressBar).progress < self.target_value:
@@ -39,3 +40,5 @@ class StatusBar(HorizontalGroup):
             self.query_one(ProgressBar).advance(-1)
         else:
             self.newValueTimer.stop()
+            if self.callback:
+                self.callback()
