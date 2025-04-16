@@ -5,16 +5,16 @@ class ShipLog(HorizontalGroup):
 
     def __init__(self, id=None):
         self.log_count = 0
-        self.TEXT = """Starting
-Captain's log, started something
-I am sitting here on my comfy chair
-Number one is missing
-Beverly is gone
-I like green ale
-and where is scotty gone
-This must be Q's fault
-This is more log
-""".splitlines()
+#         self.TEXT = """Starting
+# Captain's log, started something
+# I am sitting here on my comfy chair
+# Number one is missing
+# Beverly is gone
+# I like green ale
+# and where is scotty gone
+# This must be Q's fault
+# This is more log
+# """.splitlines()
 
         super().__init__(id=id)
 
@@ -23,13 +23,15 @@ This is more log
         
         
     def on_mount(self):
-        self.set_interval(0.25, self.update_log)
+        #self.set_interval(0.25, self.update_log)
+        pass
 
-    def update_log(self):
+    def update_log(self, text):
         log = self.query_one("#shiplog")
         if self.is_scrolling:
             return
         self.log_count +=1
         line_no = self.log_count
-        line = self.TEXT[self.log_count % len(self.TEXT)]
-        log.write_line(f"Entry[{line_no}]= {line!r}")
+        log.write_line(f"Entry[{line_no}]= {text!r}")
+        #line = self.TEXT[self.log_count % len(self.TEXT)]
+        #log.write_line(f"Entry[{line_no}]= {line!r}")

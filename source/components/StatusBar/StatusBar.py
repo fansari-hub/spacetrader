@@ -7,10 +7,11 @@ from textual.timer import Timer
 class StatusBar(HorizontalGroup):
     progress_timer : Timer
 
-    def __init__(self, valueInt, labelStr, totalInt = 100, id=None):
+    def __init__(self, valueInt, labelStr, totalInt = 100, id=None, animation_interval=100):
         self.start_value = valueInt
         self.labelStr = labelStr
         self.totalInt = totalInt
+        self.animation_interval = animation_interval
         super().__init__(id=id)
 
     def compose(self):
@@ -18,7 +19,7 @@ class StatusBar(HorizontalGroup):
         yield Label(" " + self.labelStr)
 
     def on_mount(self) -> None:
-        self.initialize_timer = self.set_interval(1 / 100, self.initialize_value, pause=False)
+        self.initialize_timer = self.set_interval(1 / self.animation_interval, self.initialize_value, pause=False)
         self.query_one(ProgressBar).update(total=self.totalInt)
 
     def initialize_value(self) -> None:

@@ -1,24 +1,50 @@
-Bar > .bar--indeterminate {
-    color: $primary;
-    background: $secondary;
+.interface_left{
+    max-width: 100%;
+    min-width: 50;
 }
 
-Bar > .bar--bar {
-    color: $primary;
-    background: $primary 30%;
+.interface_right{
+    width: 53;
 }
 
-Bar > .bar--complete {
-    color: $error;
+.dialogue_buttons{
+    align: center middle;
 }
 
-ShipStats, ShipControls {
+.datatable_buttons{
+    align: center middle;
+    height: 2;
+}
+
+ShipStats{
     border: solid green;
     padding: 0;
-    width: 53;
     height: 12;
     align: center middle;
+}
 
+ShipControls {
+    border: solid green;
+    padding: 0;
+    height: 12;
+    align: center middle;
+}
+
+ShipComms{
+    border: solid green;
+    padding: 0;
+    width: 100%;
+    align: center middle;
+}
+
+ShipComms > Log{
+    height: 10;
+    scrollbar-size: 0 1;
+}
+
+Log{
+    height: 10;
+    scrollbar-size: 0 1;    
 }
 
 Button {
@@ -38,17 +64,65 @@ Switch {
 ShipLog{
     border: solid green;
     padding: 0;
-    width: 106;
+    width: 100%;
 }
 
-ShipComms{
-    border: solid green;
-    padding: 0;
-    width: 106;
+ShipLog > Log{
+    height: 14;
+    scrollbar-size: 0 1;
+}
+
+ViewPort{
+    width: 100%;
+    height: 24;
+    border: solid purple;
     align: center middle;
 }
 
-Log{
+ViewPort > StatusBar{
+    width: 100%;
+    content-align: center middle;
+    align: center middle;
+}
+
+
+SelectionMenu{
+    width: 50;
+    height: 11;
+    align: center top;
+    border: solid blue;
+}
+
+SelectionMenu > Label{
+    color: red;
+    width: 50;
+    content-align: center middle;
+}
+
+TableList{
+    width: 50;
     height: 10;
-    scrollbar-size: 0 1;
+    align: center top;
+    border: solid blue;
+}
+
+TableList > Label{
+    color: pink;
+    width: 50;
+    content-align: center middle;
+}
+
+
+Bar > .bar--indeterminate {
+    color: $primary;
+    background: $secondary;
+}
+
+Bar > .bar--bar {
+    color: $primary;
+    background: $primary 30%;
+}
+
+Bar > .bar--complete {
+    color: $error;
 }

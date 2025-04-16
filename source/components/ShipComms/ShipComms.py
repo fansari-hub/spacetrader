@@ -5,16 +5,16 @@ class ShipComms(VerticalGroup):
 
     def __init__(self, id=None):
         self.comm_count = 0
-        self.TEXT = """Starting
-Captain's log, started something
-I am sitting here on my comfy chair
-Number one is missing
-Beverly is gone
-I like green ale
-and where is scotty gone
-This must be Q's fault
-This is more log
-""".splitlines()
+#         self.TEXT = """Starting
+# Captain's log, started something
+# I am sitting here on my comfy chair
+# Number one is missing
+# Beverly is gone
+# I like green ale
+# and where is scotty gone
+# This must be Q's fault
+# This is more log
+# """.splitlines()
 
         super().__init__(id=id)
 
@@ -28,13 +28,15 @@ This is more log
         
         
     def on_mount(self):
-        self.set_interval(0.50, self.update_comm)
+        #self.set_interval(0.50, self.update_comm)
+        pass
 
-    def update_comm(self):
+    def update_comm(self, text):
         log = self.query_one("#shipcomm")
         if self.is_scrolling:
             return
         self.comm_count +=1
         line_no = self.comm_count
-        line = self.TEXT[self.comm_count % len(self.TEXT)]
-        log.write_line(f"Entry[{line_no}]= {line!r}")
+        log.write_line(f"Entry[{line_no}]= {text!r}")
+        # line = self.TEXT[self.comm_count % len(self.TEXT)]
+        # log.write_line(f"Entry[{line_no}]= {line!r}")
