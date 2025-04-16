@@ -58,31 +58,23 @@ class ShipControls(HorizontalGroup):
         get_viewport.present_loadbar(label="Short Range Scanner", animation_interval=50)
 
     def action_btn_localdest(self) -> None:
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Awaiting local destination input...")
         headers = ["Option1", "Option2", "Option3"]
         data = [("Value1", "Value2", "Value3")]
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="Local Destination")        
 
     def action_btn_jump(self) -> None:
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Awaiting jump destination input...")
         headers = ["Option1", "Option2", "Option3"]
         data = [("Value1", "Value2", "Value3")]
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="System Jump Destination")          
 
     def action_btn_dock(self) -> None:
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Awaiting dock/land destination target...")
         option_list = ["Option1", "Option2", "Option3"]
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_options(id="longrange_list", option_values=option_list, title="Land or Dock Target")        
 
     def action_btn_extract(self) -> None:
-        get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Awaiting extraction target input...")
         option_list = ["Option1", "Option2", "Option3"]
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_options(id="longrange_list", option_values=option_list, title="Extract Resource")        

@@ -32,6 +32,6 @@ class ShipLog(HorizontalGroup):
             return
         self.log_count +=1
         line_no = self.log_count
-        log.write_line(f"Entry[{line_no}]= {text!r}")
+        log.write_line(f"[{line_no}] {text!r}")
         #line = self.TEXT[self.log_count % len(self.TEXT)]
         #log.write_line(f"Entry[{line_no}]= {line!r}")
