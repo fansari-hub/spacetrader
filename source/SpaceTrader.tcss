@@ -100,10 +100,14 @@ SelectionMenu > Label{
 }
 
 TableList{
-    width: 50;
-    height: 10;
+    width: 62;
+    height: 17;
     align: center top;
     border: solid blue;
+}
+
+TableList > .datatable_data{
+    height: 10;
 }
 
 TableList > Label{

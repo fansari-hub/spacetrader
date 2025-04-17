@@ -15,7 +15,7 @@ class TableList(VerticalGroup):
         if self.title:
             yield Label(self.title)
             yield Label("")
-        yield DataTable(id = "datatable", cursor_type="row")
+        yield DataTable(id = "datatable", cursor_type="row", classes="datatable_data")
         with HorizontalGroup(classes="datatable_buttons"):
             yield Button("Confirm", id="btn_cmd_confirm", variant="primary")
             yield Button("Cancel", id="btn_cmd_cancel", variant="error")

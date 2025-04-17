@@ -2,6 +2,7 @@ from textual.containers import HorizontalGroup, VerticalGroup
 from textual.widgets import Button
 from ..ViewPort.ViewPort import ViewPort
 from ..ShipLog.ShipLog import ShipLog
+from ..LocationIndicator.LocationIndicator import LocationIndicator
 
 class ShipControls(HorizontalGroup):
 
@@ -14,7 +15,8 @@ class ShipControls(HorizontalGroup):
         ("e", "btn_extract", "Extract Resources"),
     ]
 
-    def __init__(self, id=None):
+    def __init__(self, ship, id=None):
+        self.ship = ship
         super().__init__(id=id)
 
     def compose(self):
@@ -50,7 +52,6 @@ class ShipControls(HorizontalGroup):
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_loadbar(label="Long Range Scanner", targetvalue=100, animation_interval=25, callback=self.behaviour_longrange)
         
-
     def action_btn_shortrange(self) -> None:
         get_log = self.app.query_one(ShipLog)
         get_log.update_log("Started Short Range Scanner...")
@@ -59,15 +60,13 @@ class ShipControls(HorizontalGroup):
 
     def action_btn_localdest(self) -> None:
         headers = ["#", "Name", "Type", "Distance"]
-        data = [("1", "Jupitor", "Planet", "1,000,000 KM"),
-                ("2", "Arkanos", "Space Station", "2000 KM")
-                ]
+        data = self.ship.get_local_destinations()    
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="Local Destination", callback=self.behaviour_localdest)        
 
     def action_btn_jump(self) -> None:
         headers = ["#", "Name", "Distance"]
-        data = [("1", "Alpha Century", "5.0 Parsecs")]
+        data = self.ship.get_jump_desination()
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_table(id="longrange_list", headers=headers, data=data, title="System Jump Destination", callback=self.behaviour_jump)          
 
@@ -97,10 +96,16 @@ class ShipControls(HorizontalGroup):
         get_log = self.app.query_one(ShipLog)
         get_log.update_log("Callback: Long Range Scan Complete")   
 
-    def behaviour_jump(self, text) -> None:
+    def behaviour_jump(self, id) -> None:
         get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Callback: Selected jump destination: " + text)   
+        get_log.update_log(f"Callback: Selected jump destination: {id}")
+        self.ship.jump_to_system(id)
+        get_locationwidget = self.app.query_one(LocationIndicator)
+        get_locationwidget.update_system(id)
 
-    def behaviour_localdest(self, text) -> None:
+    def behaviour_localdest(self, id) -> None:
         get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Callback: Selected local destination: " + text)           
+        get_log.update_log(f"Callback: Selected local destination: {id}")
+        self.ship.goto_location(id)
+        get_locationwidget = self.app.query_one(LocationIndicator)
+        get_locationwidget.update_location(id)
