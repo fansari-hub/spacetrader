@@ -20,7 +20,7 @@ class SelectionMenu(VerticalGroup):
             yield Button("Confirm", id="btn_cmd_confirm", variant="primary")
             yield Button("Cancel", id="btn_cmd_cancel", variant="error")
     
-    def on_mount(self):
+    def on_mount(self) -> None:
         #get_log = self.app.query_one(ShipLog)
         #get_log.update_log("Opened interface -> " + self.title)    
         option_object = self.query_one("#optionlist")
@@ -29,7 +29,7 @@ class SelectionMenu(VerticalGroup):
             for option in self.option_values:
                 option_object.add_option(option)
 
-    def on_unmount(self):
+    def on_unmount(self) -> None:
         #get_log = self.app.query_one(ShipLog)
         #get_log.update_log("Closed interface -> " + self.title)
         pass

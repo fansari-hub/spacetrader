@@ -20,14 +20,14 @@ class TableList(VerticalGroup):
             yield Button("Confirm", id="btn_cmd_confirm", variant="primary")
             yield Button("Cancel", id="btn_cmd_cancel", variant="error")
     
-    def on_mount(self):
+    def on_mount(self) -> None:
         #get_log = self.app.query_one(ShipLog)
         #get_log.update_log("Opened interface -> " + self.title)    
         table = self.query_one("#datatable")
         table.add_columns(*self.headers)
         table.add_rows(self.data)
 
-    def on_unmount(self):
+    def on_unmount(self) -> None:
         #get_log = self.app.query_one(ShipLog)
         #get_log.update_log("Closed interface -> " + self.title)
         pass

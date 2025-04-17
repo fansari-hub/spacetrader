@@ -22,11 +22,11 @@ class ShipLog(HorizontalGroup):
         yield Log(max_lines=10_000, auto_scroll=True, highlight=True, name="Ship Log", id="shiplog")
         
         
-    def on_mount(self):
+    def on_mount(self) -> None:
         #self.set_interval(0.25, self.update_log)
         pass
 
-    def update_log(self, text):
+    def update_log(self, text) -> None:
         log = self.query_one("#shiplog")
         if self.is_scrolling:
             return

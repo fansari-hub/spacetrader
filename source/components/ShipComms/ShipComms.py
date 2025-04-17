@@ -5,17 +5,6 @@ class ShipComms(VerticalGroup):
 
     def __init__(self, id=None):
         self.comm_count = 0
-#         self.TEXT = """Starting
-# Captain's log, started something
-# I am sitting here on my comfy chair
-# Number one is missing
-# Beverly is gone
-# I like green ale
-# and where is scotty gone
-# This must be Q's fault
-# This is more log
-# """.splitlines()
-
         super().__init__(id=id)
 
     def compose(self):
@@ -27,11 +16,11 @@ class ShipComms(VerticalGroup):
             yield Button("Close\nChannel")
         
         
-    def on_mount(self):
+    def on_mount(self) -> None:
         #self.set_interval(0.50, self.update_comm)
         pass
 
-    def update_comm(self, text):
+    def update_comm(self, text) -> None:
         log = self.query_one("#shipcomm")
         if self.is_scrolling:
             return
