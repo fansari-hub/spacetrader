@@ -76,10 +76,49 @@ ViewPort{
     width: 100%;
     height: 24;
     border: solid purple;
+}
+
+ViewPort > LocationIndicator{
+    width: 100%;
+    height: 2;
+    content-align: center bottom;
+    align: center top;
+    border-bottom: solid $primary 30%;
+    margin-bottom: 0;
+}
+
+#viewport_content{
+    width: 100%;
+    height: 1fr;
     align: center middle;
 }
 
+#viewport_content > SystemVisualizer{
+    width: 100%;
+    height: 100%;
+    padding: 0 1;
+}
+
+#viewport_content > LongRangeVisualizer{
+    width: 100%;
+    height: 100%;
+    padding: 0 1;
+}
+
+#viewport_empty{
+    width: 100%;
+    height: 100%;
+    content-align: center middle;
+    color: grey;
+}
+
 ViewPort > StatusBar{
+    width: 100%;
+    content-align: center middle;
+    align: center middle;
+}
+
+#viewport_content > StatusBar{
     width: 100%;
     content-align: center middle;
     align: center middle;

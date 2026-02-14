@@ -1,6 +1,5 @@
 from textual.containers import VerticalGroup, HorizontalGroup
 from textual.widgets import DataTable, Label, Button
-from ..ShipLog.ShipLog import ShipLog
 
 class TableList(VerticalGroup):
 
@@ -37,7 +36,6 @@ class TableList(VerticalGroup):
         button_id = event.button.id
         match button_id:
             case "btn_cmd_confirm":
-                get_log = self.app.query_one(ShipLog)
                 table = self.query_one("#datatable")
                 #get_log.update_log(f"{self.title} -> {table.cursor_coordinate}")    
                 if self.callback:

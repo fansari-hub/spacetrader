@@ -1,5 +1,6 @@
 from textual.containers import HorizontalGroup
-from textual.widgets import Log
+from textual.widgets import RichLog
+from rich.text import Text
 
 class ShipLog(HorizontalGroup):
 
@@ -19,7 +20,14 @@ class ShipLog(HorizontalGroup):
         super().__init__(id=id)
 
     def compose(self):
-        yield Log(max_lines=10_000, auto_scroll=True, highlight=True, name="Ship Log", id="shiplog")
+        yield RichLog(
+            max_lines=10_000,
+            auto_scroll=True,
+            highlight=True,
+            markup=True,
+            name="Ship Log",
+            id="shiplog",
+        )
         
         
     def on_mount(self) -> None:
@@ -32,6 +40,12 @@ class ShipLog(HorizontalGroup):
             return
         self.log_count +=1
         line_no = self.log_count
-        log.write_line(f"[{line_no}] {text!r}")
+        prefix = Text(f"[{line_no}] ", style="dim")
+        if isinstance(text, Text):
+            prefix.append_text(text)
+            log.write(prefix)
+        else:
+            prefix.append(str(text))
+            log.write(prefix)
         #line = self.TEXT[self.log_count % len(self.TEXT)]
         #log.write_line(f"Entry[{line_no}]= {line!r}")

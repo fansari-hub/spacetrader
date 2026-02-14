@@ -1,7 +1,6 @@
 from textual.containers import VerticalGroup, HorizontalGroup
 from textual.widgets import OptionList, Label, Button
 from textual.widgets.option_list import Option
-from ..ShipLog.ShipLog import ShipLog
 
 class SelectionMenu(VerticalGroup):
 
@@ -38,10 +37,9 @@ class SelectionMenu(VerticalGroup):
         button_id = event.button.id
         match button_id:
             case "btn_cmd_confirm":
-                get_log = self.app.query_one(ShipLog)
                 option_object = self.query_one("#optionlist")
                 option_highlighted = option_object.highlighted
-                if option_highlighted:
+                if option_highlighted is not None:
                     option_index = option_object.get_option_at_index(option_object.highlighted)
                     #get_log.update_log(self.title + " -> " + option_index.prompt)
                     if self.callback:
