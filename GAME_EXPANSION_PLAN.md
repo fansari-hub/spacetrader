@@ -154,3 +154,65 @@
 - How punishing should failure be (insurance, permadeath, debt)?
 - How simulation-heavy should markets be vs gamey and readable?
 - Should LLM be optional flavor or also drive mission structure?
+
+## 11) Current Prototype Status (2026-02-17)
+
+### Implemented Foundation
+- Added station/market-oriented world scaffolding:
+  - Orbital `Station` bodies are generated in most systems.
+  - System markets are generated with commodity price/stock data.
+- Added player economy state:
+  - Credits, fuel, cargo capacity, cargo manifest.
+- Added basic fuel economy:
+  - Jump/local travel consumes fuel based on distance.
+  - Travel is blocked if fuel is insufficient.
+- Added live ShipStats updates:
+  - Status bars are aligned and stable.
+  - Resource row shows `Credits | Cargo | Fuel`.
+  - Fuel value is color-coded by level.
+
+### Implemented Trading Loop
+- Trading is available only at station locations (`has_market=True`).
+- Station action flow:
+  - Open local actions on selected location.
+  - If selected current location is a station, `Open Trade Console` is available.
+- Trade console flow is keyboard-first:
+  - Choose `Buy Cargo` / `Sell Cargo`.
+  - Choose commodity from menu and trade 1 unit per confirm.
+  - Market stock and player credits/cargo update immediately.
+
+### Implemented Navigation + Cartography Flow
+- Primary navigation is keyboard-first:
+  - `[J]` Jump navigation
+  - `[G]` Goto local destination
+  - `Up/Down` select target
+  - `Enter` open action menu / confirm popup
+  - `Esc` cancel popup
+- Cartography-based targeting:
+  - No jump/local destination popup tables.
+  - Target selection occurs directly on long/local cartography.
+  - Action popup appears for selected target (`Jump`, `Travel`, `Trade`, `Dock`, `Extract` as applicable).
+- Jump arrival behavior:
+  - Auto-marks long-range scan for new system.
+  - Auto-scans local cartography if needed.
+  - View switches to local cartography after jump.
+- Large lists are windowed around selection:
+  - Long-range and local views now "scroll" with selection.
+
+### Current Sorting Rules
+- Long-range systems:
+  - Current system is pinned first.
+  - Remaining systems sorted by distance ascending (nearest to farthest).
+- Local destinations:
+  - Sorted by distance ascending from current local ship position.
+
+### UX/Technical Notes
+- Popups are keyboard-only (no required mouse interaction).
+- Popup close behavior restores cartography reliably to avoid blank viewport states.
+- Global app-level key bindings route to game actions to reduce focus-related shortcut failures.
+
+### Suggested Next Work Session
+1. Add persistent save/load for the expanded game state (credits, fuel, cargo, markets, selections, scans).
+2. Add encounter roll hooks to jump/local completion (even with simple placeholder outcomes).
+3. Replace placeholder `Dock/Land` and `Extract` outcomes with real resource/economy effects.
+4. Add compact on-screen mode indicator (e.g., `Long Cartography`, `Local Cartography`, `Action Menu`) to make keyboard context explicit.

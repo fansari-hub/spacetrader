@@ -1,7 +1,10 @@
 from ..GalacticCoordinates.GalacticCoordinates import GalacticCoordinates
 from ..CelestialBody.CelestialBody import CelestialBody
-from random import randrange
+from random import randrange, random
 from ..NameGenerator import generate_body_name, generate_body_type
+
+SYSTEM_MARKET_CHANCE = 0.90
+STATION_PER_BODY_CHANCE = 0.35
 
 class CelestialSystem():
     def __init__(self, coord=(0,0), name="The Solar System", id=0, type="Solar", galaxy_id=0):
@@ -27,3 +30,46 @@ class CelestialSystem():
             used_body_names.add(name)
             new_member = CelestialBody(coords, name, x, body_type, system_id=self.id)
             self.members.append(new_member)
+
+        self._generate_orbital_stations(used_body_names)
+
+    def _generate_orbital_stations(self, used_body_names: set[str]) -> None:
+        if random() > SYSTEM_MARKET_CHANCE:
+            return
+
+        orbit_targets = [body for body in self.members if body.type in {"Planet", "Gas Giant", "Dwarf Planet"}]
+        if not orbit_targets:
+            orbit_targets = self.members[:1]
+
+        station_targets = []
+        for body in orbit_targets:
+            if random() <= STATION_PER_BODY_CHANCE:
+                station_targets.append(body)
+
+        if not station_targets:
+            station_targets.append(orbit_targets[0])
+
+        next_id = len(self.members) + 1
+        for body in station_targets:
+            name = generate_body_name(self.name, "Station")
+            while name in used_body_names:
+                name = generate_body_name(self.name, "Station")
+            used_body_names.add(name)
+            offset_x = randrange(-40, 41)
+            offset_y = randrange(-40, 41)
+            coords = (
+                max(0, min(999, body.coordinates.x + offset_x)),
+                max(0, min(999, body.coordinates.y + offset_y)),
+            )
+            station = CelestialBody(
+                coords,
+                name,
+                next_id,
+                "Station",
+                system_id=self.id,
+                orbits_body_id=body.id,
+                has_market=True,
+            )
+            self.members.append(station)
+            body.moons.append(station.id)
+            next_id += 1

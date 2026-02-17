@@ -104,6 +104,7 @@ WORLD_TITLES = [
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
 LETTERS = ["A", "B", "C", "D", "E", "F"]
 ASTEROID_CODES = ["AX", "KT", "RX", "CN", "VB", "TR"]
+STATION_PREFIXES = ["Trade", "Orbital", "Freeport", "Guild", "Dock"]
 
 BODY_TYPES = [
     "Planet",
@@ -147,6 +148,8 @@ def generate_body_name(system_name: str, body_type: str = "Planet") -> str:
         return f"{choice(WORLD_ROOTS)} Major"
     if body_type == "Dwarf Planet":
         return f"{choice(WORLD_ROOTS)} Minor"
+    if body_type == "Station":
+        return f"{choice(STATION_PREFIXES)} {choice(WORLD_TITLES)} {choice(LETTERS)}-{randint(1, 9)}"
 
     style = randint(1, 4)
     if style == 1:

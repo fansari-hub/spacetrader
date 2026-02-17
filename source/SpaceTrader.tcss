@@ -19,15 +19,20 @@
 ShipStats{
     border: solid green;
     padding: 0;
-    height: 12;
+    height: 14;
     align: center middle;
 }
 
 ShipControls {
     border: solid green;
     padding: 0;
-    height: 12;
+    height: 10;
     align: center middle;
+}
+
+ShipControls > VerticalGroup > Label{
+    width: 100%;
+    content-align: center middle;
 }
 
 ShipComms{

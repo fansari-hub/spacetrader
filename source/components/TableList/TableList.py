@@ -1,7 +1,11 @@
-from textual.containers import VerticalGroup, HorizontalGroup
-from textual.widgets import DataTable, Label, Button
+from textual.containers import VerticalGroup
+from textual.widgets import DataTable, Label
 
 class TableList(VerticalGroup):
+    BINDINGS = [
+        ("enter", "confirm", "Confirm"),
+        ("escape", "cancel", "Cancel"),
+    ]
 
     def __init__(self, id=None, headers=("Column1", "Columns2", "Column3"), data=[("Data", "Not", "Set")], title=None, callback=None):
         self.headers = headers
@@ -15,9 +19,7 @@ class TableList(VerticalGroup):
             yield Label(self.title)
             yield Label("")
         yield DataTable(id = "datatable", cursor_type="row", classes="datatable_data")
-        with HorizontalGroup(classes="datatable_buttons"):
-            yield Button("Confirm", id="btn_cmd_confirm", variant="primary")
-            yield Button("Cancel", id="btn_cmd_cancel", variant="error")
+        yield Label("[Enter] Confirm   [Esc] Cancel", markup=False, id="table_hint")
     
     def on_mount(self) -> None:
         #get_log = self.app.query_one(ShipLog)
@@ -32,14 +34,24 @@ class TableList(VerticalGroup):
         pass
 
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        button_id = event.button.id
-        match button_id:
-            case "btn_cmd_confirm":
-                table = self.query_one("#datatable")
-                #get_log.update_log(f"{self.title} -> {table.cursor_coordinate}")    
-                if self.callback:
-                        self.callback(table.get_cell_at((table.cursor_coordinate.row, 0)))    
-                self.remove()
-            case "btn_cmd_cancel":
-                self.remove()         
+    def action_confirm(self) -> None:
+        table = self.query_one("#datatable")
+        if self.callback:
+            self.callback(table.get_cell_at((table.cursor_coordinate.row, 0)))
+        self._close_and_restore(force_restore=False)
+
+    def action_cancel(self) -> None:
+        self._close_and_restore(force_restore=True)
+
+    def _close_and_restore(self, force_restore: bool) -> None:
+        parent = self.parent
+        if parent and self in parent.children:
+            self.remove()
+        self.call_after_refresh(lambda: self._restore_if_needed(force_restore))
+
+    def _restore_if_needed(self, force_restore: bool) -> None:
+        from ..ViewPort.ViewPort import ViewPort
+        viewport = self.app.query_one(ViewPort)
+        content = viewport.query_one("#viewport_content")
+        if force_restore or not content.children:
+            viewport.refresh_current_display()

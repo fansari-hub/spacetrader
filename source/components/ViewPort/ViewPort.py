@@ -9,6 +9,7 @@ from ..LongRangeVisualizer.LongRangeVisualizer import LongRangeVisualizer
 
 
 class ViewPort(VerticalGroup):
+    can_focus = True
 
     def __init__(self, ship, galaxy, id=None):
         self.ship = ship

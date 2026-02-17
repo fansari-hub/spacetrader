@@ -18,6 +18,6 @@ class MainInterface(VerticalGroup):
                 yield ViewPort(ship=self.ship, galaxy=self.galaxy, id="viewport")
                 yield ShipLog()
             with VerticalGroup(classes="interface_right"):
-                yield ShipStats()
+                yield ShipStats(ship=self.ship)
                 yield ShipControls(ship=self.ship)
                 yield ShipComms()

@@ -14,8 +14,10 @@ class LongRangeVisualizer(Static):
 
     def refresh_visual(self) -> None:
         current_system_id = self.ship.get_current_system()
+        selected_system_id = self.ship.get_selected_jump_system_id()
         current_system = self.galaxy.get_celestial_system(current_system_id)
-        systems = list(self.galaxy.celestial_systems)
+        ordered_ids = self.ship.get_ordered_jump_system_ids()
+        systems = [self.galaxy.get_celestial_system(system_id) for system_id in ordered_ids]
 
         if not systems:
             self.update("LONG-RANGE SCANNER OFFLINE\nNo stellar systems found.")
@@ -41,8 +43,19 @@ class LongRangeVisualizer(Static):
         )
         output.append(f"{noise}\n\n", style="bright_black")
 
-        for system in systems:
+        visible_systems, first_visible, last_visible = self._visible_window(
+            systems, selected_system_id
+        )
+
+        if len(visible_systems) < len(systems):
+            output.append(
+                f"Showing {first_visible}-{last_visible} of {len(systems)} systems\n\n",
+                style="dim",
+            )
+
+        for system in visible_systems:
             is_current = system.id == current_system_id
+            is_selected = system.id == selected_system_id
             is_visited = system.id in self.ship.visited_systems
             distance = system.coordinates.get_distance(current_system.coordinates)
             position = int((distance / max_distance) * (track_width - 1))
@@ -53,15 +66,26 @@ class LongRangeVisualizer(Static):
                 marker_style = "bold green" if is_visited else "bold yellow"
 
             row = Text()
-            row_prefix = "▶" if is_current else " "
-            row.append(f"{row_prefix}[{system.id:02d}] |", style="cyan" if is_current else "white")
+            row_prefix = ">" if is_selected else " "
+            row_style = "yellow" if is_selected else "white"
+            if is_current:
+                row_prefix = "@"
+                row_style = "cyan"
+            row.append(f"{row_prefix}[{system.id:02d}] |", style=row_style)
             for i in range(track_width):
                 if i == position:
                     row.append(marker, style=marker_style)
                 else:
                     row.append("-", style="bright_black")
             row.append("|  ")
-            name_style = "bold cyan" if is_current else ("bold green" if is_visited else "white")
+            if is_current:
+                name_style = "bold cyan"
+            elif is_selected:
+                name_style = "bold yellow"
+            elif is_visited:
+                name_style = "bold green"
+            else:
+                name_style = "white"
             row.append(f"{system.name[:20]:20}  ", style=name_style)
             row.append(f"{'VISITED' if is_visited else 'UNSEEN ':7}  ", style="green" if is_visited else "white")
             row.append(f"{self.ship.format_interstellar_distance(distance):>12}", style="white")
@@ -70,10 +94,31 @@ class LongRangeVisualizer(Static):
 
         output.append("\n")
         output.append("Legend: ", style="white")
-        output.append("▶ current system, ", style="bold cyan")
+        output.append("@ current system, ", style="bold cyan")
+        output.append("> selected target, ", style="bold yellow")
         output.append("green names = visited, ", style="bold green")
         output.append("@ current marker, ", style="bold cyan")
         output.append("+ visited marker, ", style="bold green")
         output.append("* unseen marker\n", style="bold yellow")
+        output.append("Controls: Up/Down select target, Enter open actions, [J] jump navigation\n", style="white")
         output.append(header, style="green")
         self.update(output)
+
+    def _visible_window(self, systems: list, selected_id: int) -> tuple[list, int, int]:
+        total = len(systems)
+        if total <= 0:
+            return [], 0, 0
+        max_rows = max(8, self.size.height - 13)
+        if total <= max_rows:
+            return systems, 1, total
+
+        selected_index = 0
+        for idx, system in enumerate(systems):
+            if system.id == selected_id:
+                selected_index = idx
+                break
+
+        half = max_rows // 2
+        start = max(0, min(selected_index - half, total - max_rows))
+        end = start + max_rows
+        return systems[start:end], start + 1, end
