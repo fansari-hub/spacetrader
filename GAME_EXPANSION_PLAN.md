@@ -145,7 +145,7 @@
 ## 9) Immediate Next Sprint (Concrete)
 - [x] Implement commodities + market UI.
 - [x] Add wallet/cargo/fuel tracking to ship stats.
-- [ ] Add travel encounter roll with simple outcomes.
+- [x] Add travel encounter roll with simple outcomes.
 - [ ] Add first hostile NPC encounter (pirate) with minimal combat choice.
 - [x] Add save/load to persist progression.
 
@@ -206,6 +206,7 @@
   - Auto-marks long-range scan for new system.
   - Auto-scans local cartography if needed.
   - View switches to local cartography after jump.
+  - Travel completion now runs deterministic encounter checks.
 - Large lists are windowed around selection:
   - Long-range and local views now "scroll" with selection.
 
@@ -222,6 +223,7 @@
   - active command menu state,
   - idle state,
   - live action preview while moving target selection.
+  - red-highlighted encounter alert state for travel events requiring acknowledgement.
 - Global app-level key bindings route to game actions to reduce focus-related shortcut failures.
 - Added compact viewport mode indicator line (`Mode: ...`) to show context (`Long Cartography`, `Local Cartography`, `Action Menu`, `Progress`).
 - Reduced selection-change log spam (no per-arrow key log entries).
@@ -237,12 +239,24 @@
   - Slot rows show compact timestamp and file size.
   - Legacy load fallback from `saves/savegame.json` for slot 1.
 
+### Encounter Status
+- Travel encounter roll hooks are implemented for:
+  - jump completion,
+  - local travel completion.
+- Encounter outcomes currently include placeholder deterministic events:
+  - none/stable transit,
+  - fuel leak,
+  - micrometeor damage,
+  - salvage credits,
+  - distress signal narrative.
+- Non-`none` encounter outcomes trigger `ShipComms` encounter alert UI.
+
 ### Documentation + Cleanup Status
 - README updated to reflect current controls and gameplay flow.
 - Removed obsolete popup menu components and related CSS (`SelectionMenu`, `TableList`) after full `ShipComms` integration.
 
 ### Suggested Next Work Session
-1. Add encounter roll hooks to jump/local completion (simple deterministic placeholder outcomes first).
-2. Implement first hostile NPC encounter (pirate) with minimal `fight/flee` resolution.
-3. Replace placeholder `Dock/Land` and `Extract` callbacks with real resource/economy effects.
-4. Add a lightweight event summary panel/history for recent travel outcomes and encounter results.
+1. Implement first hostile NPC encounter (pirate) with minimal `fight/flee` resolution.
+2. Replace placeholder `Dock/Land` and `Extract` callbacks with real resource/economy effects.
+3. Add a lightweight event summary panel/history for recent travel outcomes and encounter results.
+4. Expand encounter outcomes with scan/route modifiers and reputation hooks.

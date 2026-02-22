@@ -26,6 +26,7 @@ class ShipComms(VerticalGroup):
         return self.menu_active
 
     def open_menu(self, option_values: list, title: str, callback=None, selected_index: int | None = None) -> None:
+        self.remove_class("comms-alert")
         self.menu_active = True
         self.menu_callback = callback
         self.menu_values = []
@@ -46,6 +47,15 @@ class ShipComms(VerticalGroup):
             else:
                 option_list.highlighted = max(0, min(int(selected_index), len(option_values) - 1))
         self._set_viewport_mode("Action Menu (Comms)")
+
+    def open_alert_menu(self, option_values: list, title: str, callback=None, selected_index: int | None = None) -> None:
+        self.open_menu(
+            option_values=option_values,
+            title=title,
+            callback=callback,
+            selected_index=selected_index,
+        )
+        self.add_class("comms-alert")
 
     def close_menu(self) -> None:
         self.menu_active = False

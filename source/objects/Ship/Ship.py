@@ -28,6 +28,7 @@ class Ship():
         self.visited_locations_by_system = {self.current_systemID: {self.current_localID}}
         self.selected_jump_system_id = self.current_systemID
         self.selected_local_id = self.current_localID
+        self.travel_event_index = 0
         # Starting sector is immediately known to the player.
         self.mark_long_range_scan()
         self.mark_short_range_scan()
@@ -285,6 +286,7 @@ class Ship():
             },
             "selected_jump_system_id": self.selected_jump_system_id,
             "selected_local_id": self.selected_local_id,
+            "travel_event_index": self.travel_event_index,
         }
 
     def apply_state(self, data: dict) -> None:
@@ -380,6 +382,7 @@ class Ship():
             self.selected_local_id = loaded_selected_local
         else:
             self.selected_local_id = self.current_localID
+        self.travel_event_index = max(0, int(data.get("travel_event_index", 0)))
 
     def _int_set(self, values) -> set[int]:
         converted = set()
@@ -389,3 +392,7 @@ class Ship():
             except (TypeError, ValueError):
                 continue
         return converted
+
+    def next_travel_event_index(self) -> int:
+        self.travel_event_index += 1
+        return self.travel_event_index

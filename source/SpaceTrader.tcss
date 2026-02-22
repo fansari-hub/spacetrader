@@ -54,6 +54,11 @@ ShipComms.comms-active{
     background: rgb(35, 28, 0);
 }
 
+ShipComms.comms-active.comms-alert{
+    border: heavy red;
+    background: rgb(36, 8, 8);
+}
+
 ShipComms > Log{
     height: 5;
     scrollbar-size: 0 1;
@@ -78,12 +83,22 @@ ShipComms.comms-active #comms_menu_title{
     text-style: bold;
 }
 
+ShipComms.comms-active.comms-alert #comms_menu_title{
+    color: white;
+    background: red;
+    text-style: bold;
+}
+
 #comms_menu_options{
     height: 1fr;
 }
 
 ShipComms.comms-active #comms_menu_options{
     border: solid yellow;
+}
+
+ShipComms.comms-active.comms-alert #comms_menu_options{
+    border: solid red;
 }
 
 #comms_menu_hint{
@@ -94,6 +109,11 @@ ShipComms.comms-active #comms_menu_options{
 
 ShipComms.comms-active #comms_menu_hint{
     color: yellow;
+    text-style: bold;
+}
+
+ShipComms.comms-active.comms-alert #comms_menu_hint{
+    color: red;
     text-style: bold;
 }
 

@@ -54,3 +54,14 @@ Terminal-first space trading and navigation prototype built with Textual.
 
 - Starting system is pre-scanned (long + short range) for immediate visibility.
 - Comms panel shows live action preview while moving through cartography targets.
+
+## Travel Encounters
+
+- Jump and local travel now run a deterministic encounter roll on completion.
+- Current placeholder outcomes:
+  - stable transit (no effect)
+  - fuel leak (fuel loss)
+  - micrometeor impact (shield/structure damage)
+  - salvage opportunity (credit gain)
+  - distress signal (narrative event)
+- Non-trivial encounter outcomes raise a red-highlighted `Encounter Alert` menu in `ShipComms` and require acknowledgement.

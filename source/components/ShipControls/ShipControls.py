@@ -11,6 +11,7 @@ from ..LongRangeVisualizer.LongRangeVisualizer import LongRangeVisualizer
 from ..SystemVisualizer.SystemVisualizer import SystemVisualizer
 from ..ShipComms.ShipComms import ShipComms
 from objects.SaveGame import save_game, load_game, get_save_slot_summaries
+from objects.EncounterEngine import resolve_travel_encounter
 
 class ShipControls(HorizontalGroup):
 
@@ -185,7 +186,7 @@ class ShipControls(HorizontalGroup):
             label="Jump Drive",
             targetvalue=100,
             animation_interval=self._travel_animation_interval(jump_distance, "jump"),
-            callback=lambda: self._complete_jump(id, fuel_cost),
+            callback=lambda: self._complete_jump(id, fuel_cost, jump_distance),
         )
 
     def behaviour_localdest(self, id) -> None:
@@ -211,10 +212,10 @@ class ShipControls(HorizontalGroup):
             label="Sublight Transit",
             targetvalue=100,
             animation_interval=self._travel_animation_interval(local_distance, "local"),
-            callback=lambda: self._complete_local_travel(id, fuel_cost),
+            callback=lambda: self._complete_local_travel(id, fuel_cost, local_distance),
         )
 
-    def _complete_jump(self, id: int, fuel_cost: int) -> None:
+    def _complete_jump(self, id: int, fuel_cost: int, jump_distance: float) -> None:
         self.ship.spend_fuel(fuel_cost)
         self.ship.jump_to_system(id)
         # Keep long-range navigation usable immediately after arrival.
@@ -224,7 +225,6 @@ class ShipControls(HorizontalGroup):
             self.ship.mark_short_range_scan()
             auto_scanned_local = True
         self.refresh_action_buttons()
-        self.app.query_one(ShipStats).refresh_from_ship()
         get_log = self.app.query_one(ShipLog)
         system_name = self.ship.galaxy.get_celestial_system(id).name
         message = Text("Arrived at ")
@@ -237,13 +237,14 @@ class ShipControls(HorizontalGroup):
         get_locationwidget.update_system(id)
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_system_visual()
+        self._handle_travel_encounter("jump", jump_distance, system_name)
+        self.app.query_one(ShipStats).refresh_from_ship()
         self.call_after_refresh(self.refresh_action_preview)
 
-    def _complete_local_travel(self, id: int, fuel_cost: int) -> None:
+    def _complete_local_travel(self, id: int, fuel_cost: int, local_distance: float) -> None:
         self.ship.spend_fuel(fuel_cost)
         self.ship.goto_location(id)
         self.refresh_action_buttons()
-        self.app.query_one(ShipStats).refresh_from_ship()
         get_log = self.app.query_one(ShipLog)
         local_body = self.ship.galaxy.get_celestial_system(self.ship.get_current_system()).members[id - 1]
         local_name = local_body.name
@@ -260,6 +261,8 @@ class ShipControls(HorizontalGroup):
         get_locationwidget.update_location(id)
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.refresh_current_display()
+        self._handle_travel_encounter("local", local_distance, local_name)
+        self.app.query_one(ShipStats).refresh_from_ship()
         self.call_after_refresh(self.refresh_action_preview)
 
     def _travel_animation_interval(self, distance: float, travel_type: str) -> int:
@@ -268,6 +271,86 @@ class ShipControls(HorizontalGroup):
         else:
             target_seconds = max(1.0, min(6.0, distance / 250.0))
         return max(5, int(100 / target_seconds))
+
+    def _handle_travel_encounter(self, travel_type: str, distance: float, destination_name: str) -> None:
+        event_index = self.ship.next_travel_event_index()
+        result = resolve_travel_encounter(
+            ship=self.ship,
+            travel_type=travel_type,
+            distance=distance,
+            destination_name=destination_name,
+            event_index=event_index,
+        )
+        if result.fuel_delta:
+            self.ship.fuel = max(0, self.ship.fuel + result.fuel_delta)
+        if result.credits_delta:
+            self.ship.credits = max(0, self.ship.credits + result.credits_delta)
+        if result.shield_delta < 0:
+            self.ship.shield_damage(-result.shield_delta)
+        if result.structure_delta < 0:
+            self.ship.structure_damage(-result.structure_delta)
+
+        get_log = self.app.query_one(ShipLog)
+        message = Text("Encounter: ", style="white")
+        if result.outcome == "none":
+            message.append(result.title, style="dim")
+            message.append(" — ", style="dim")
+            message.append(result.detail, style="dim")
+            get_log.update_log(message)
+            return
+
+        message.append(result.title, style="bold yellow")
+        message.append(" | ", style="grey50")
+        message.append(result.detail, style="white")
+        get_log.update_log(message)
+        self._present_encounter_alert(result)
+
+    def _present_encounter_alert(self, result) -> None:
+        detail_line = Text()
+        detail_line.append("Details: ", style="white")
+        detail_line.append(result.detail, style="bold yellow")
+
+        effects_line = self._build_encounter_effects_line(result)
+        options = [
+            (detail_line, "ack"),
+            (effects_line, "ack"),
+            ("Acknowledge", "ack"),
+        ]
+        self.app.query_one(ShipComms).open_alert_menu(
+            option_values=options,
+            title=f"Encounter Alert: {result.title}",
+            callback=self._handle_encounter_alert_action,
+            selected_index=2,
+        )
+
+    def _handle_encounter_alert_action(self, _option_value) -> None:
+        self.refresh_action_preview()
+
+    def _build_encounter_effects_line(self, result) -> Text:
+        line = Text("Effects: ", style="white")
+        chunks = []
+        if result.fuel_delta:
+            style = "bold red" if result.fuel_delta < 0 else "bold green"
+            chunks.append((f"Fuel {result.fuel_delta:+d}", style))
+        if result.credits_delta:
+            style = "bold red" if result.credits_delta < 0 else "bold green"
+            chunks.append((f"Credits {result.credits_delta:+d}", style))
+        if result.shield_delta:
+            style = "bold red" if result.shield_delta < 0 else "bold green"
+            chunks.append((f"Shields {result.shield_delta:+d}", style))
+        if result.structure_delta:
+            style = "bold red" if result.structure_delta < 0 else "bold green"
+            chunks.append((f"Structure {result.structure_delta:+d}", style))
+
+        if not chunks:
+            line.append("No resource changes.", style="dim")
+            return line
+
+        for index, (text, style) in enumerate(chunks):
+            if index > 0:
+                line.append(" | ", style="grey50")
+            line.append(text, style=style)
+        return line
 
     def _open_trade_inventory_menu(self, mode: str, selected_commodity_id: str | None = None) -> None:
         current_system_id = self.ship.get_current_system()
