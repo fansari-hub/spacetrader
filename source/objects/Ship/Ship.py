@@ -28,6 +28,9 @@ class Ship():
         self.visited_locations_by_system = {self.current_systemID: {self.current_localID}}
         self.selected_jump_system_id = self.current_systemID
         self.selected_local_id = self.current_localID
+        # Starting sector is immediately known to the player.
+        self.mark_long_range_scan()
+        self.mark_short_range_scan()
 
 
     def set_engine_power(self, intValue) -> None:
@@ -257,3 +260,132 @@ class Ship():
     
     def undock(self) -> None:
         self.is_docked = False
+
+    def to_dict(self) -> dict:
+        return {
+            "lifesupport_power": self.lifesupport_power,
+            "structure": self.structure,
+            "engine_power": self.engine_power,
+            "shields": self.shields,
+            "current_systemID": self.current_systemID,
+            "current_localID": self.current_localID,
+            "is_docked": self.is_docked,
+            "resources": self.resources,
+            "credits": self.credits,
+            "fuel": self.fuel,
+            "cargo_capacity": self.cargo_capacity,
+            "cargo_manifest": {key: int(value) for key, value in self.cargo_manifest.items()},
+            "name": self.name,
+            "scanned_long_range_systems": sorted(self.scanned_long_range_systems),
+            "scanned_short_range_systems": sorted(self.scanned_short_range_systems),
+            "visited_systems": sorted(self.visited_systems),
+            "visited_locations_by_system": {
+                str(system_id): sorted(location_ids)
+                for system_id, location_ids in self.visited_locations_by_system.items()
+            },
+            "selected_jump_system_id": self.selected_jump_system_id,
+            "selected_local_id": self.selected_local_id,
+        }
+
+    def apply_state(self, data: dict) -> None:
+        self.lifesupport_power = int(data.get("lifesupport_power", self.lifesupport_power))
+        self.structure = int(data.get("structure", self.structure))
+        self.engine_power = int(data.get("engine_power", self.engine_power))
+        self.shields = int(data.get("shields", self.shields))
+        self.is_docked = bool(data.get("is_docked", self.is_docked))
+        self.resources = int(data.get("resources", self.resources))
+        self.credits = int(data.get("credits", self.credits))
+        self.fuel = int(data.get("fuel", self.fuel))
+        self.cargo_capacity = int(data.get("cargo_capacity", self.cargo_capacity))
+        self.cargo_manifest = {
+            str(commodity_id): int(quantity)
+            for commodity_id, quantity in data.get("cargo_manifest", {}).items()
+            if int(quantity) > 0
+        }
+        self.name = data.get("name", self.name)
+
+        total_systems = len(self.galaxy.celestial_systems)
+        if total_systems <= 0:
+            self.current_systemID = 1
+            self.current_localID = 1
+            self.selected_jump_system_id = 1
+            self.selected_local_id = 1
+            self.scanned_long_range_systems = set()
+            self.scanned_short_range_systems = set()
+            self.visited_systems = {1}
+            self.visited_locations_by_system = {}
+            return
+
+        loaded_system_id = int(data.get("current_systemID", self.current_systemID))
+        self.current_systemID = max(1, min(loaded_system_id, total_systems))
+        members = self.galaxy.get_celestial_system(self.current_systemID).members
+        member_count = len(members)
+
+        loaded_local_id = int(data.get("current_localID", self.current_localID))
+        if member_count > 0:
+            self.current_localID = max(1, min(loaded_local_id, member_count))
+        else:
+            self.current_localID = 0
+
+        self.ship_coordinates_galactic = self.galaxy.get_celestial_system(self.current_systemID).coordinates
+        if self.current_localID > 0:
+            self.ship_coordinates_local = members[self.current_localID - 1].coordinates
+        else:
+            self.ship_coordinates_local = self.ship_coordinates_galactic
+
+        self.scanned_long_range_systems = {
+            system_id
+            for system_id in self._int_set(data.get("scanned_long_range_systems", []))
+            if 1 <= system_id <= total_systems
+        }
+        self.scanned_short_range_systems = {
+            system_id
+            for system_id in self._int_set(data.get("scanned_short_range_systems", []))
+            if 1 <= system_id <= total_systems
+        }
+        self.visited_systems = {
+            system_id
+            for system_id in self._int_set(data.get("visited_systems", []))
+            if 1 <= system_id <= total_systems
+        }
+        self.visited_systems.add(self.current_systemID)
+
+        visited_locations = {}
+        for raw_system_id, raw_location_ids in data.get("visited_locations_by_system", {}).items():
+            system_id = int(raw_system_id)
+            if not (1 <= system_id <= total_systems):
+                continue
+            max_local = len(self.galaxy.get_celestial_system(system_id).members)
+            visited_locations[system_id] = {
+                location_id
+                for location_id in self._int_set(raw_location_ids)
+                if 1 <= location_id <= max_local
+            }
+        if self.current_systemID not in visited_locations:
+            visited_locations[self.current_systemID] = set()
+        if self.current_localID > 0:
+            visited_locations[self.current_systemID].add(self.current_localID)
+        self.visited_locations_by_system = visited_locations
+
+        loaded_selected_jump = int(data.get("selected_jump_system_id", self.current_systemID))
+        if 1 <= loaded_selected_jump <= total_systems:
+            self.selected_jump_system_id = loaded_selected_jump
+        else:
+            self.selected_jump_system_id = self.current_systemID
+
+        loaded_selected_local = int(data.get("selected_local_id", self.current_localID))
+        if member_count <= 0:
+            self.selected_local_id = 0
+        elif 1 <= loaded_selected_local <= member_count:
+            self.selected_local_id = loaded_selected_local
+        else:
+            self.selected_local_id = self.current_localID
+
+    def _int_set(self, values) -> set[int]:
+        converted = set()
+        for value in values:
+            try:
+                converted.add(int(value))
+            except (TypeError, ValueError):
+                continue
+        return converted

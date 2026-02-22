@@ -1,0 +1,3363 @@
+{
+  "galaxy": {
+    "celestial_systems": [
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 135,
+          "y": 648
+        },
+        "galaxy_id": 0,
+        "id": 1,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 290,
+              "y": 756
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Arcturus VIII",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 292,
+              "y": 481
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Frontier 21 A-5",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 499,
+              "y": 332
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "AX-325",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 660,
+              "y": 533
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [
+              11
+            ],
+            "name": "Helion Colony",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 600,
+              "y": 152
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Comet Auron-22",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Comet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 484,
+              "y": 203
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "KT-945",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 402,
+              "y": 113
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Frontier 21 III",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 713,
+              "y": 590
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "RX-467",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 103,
+              "y": 178
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "Frontier 21 VI",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 320,
+              "y": 783
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [],
+            "name": "CN-667",
+            "orbits_body_id": null,
+            "system_id": 1,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 655,
+              "y": 509
+            },
+            "has_market": true,
+            "id": 11,
+            "moons": [],
+            "name": "Trade Colony A-1",
+            "orbits_body_id": 4,
+            "system_id": 1,
+            "type": "Station"
+          }
+        ],
+        "name": "Frontier 21",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 164,
+          "y": 385
+        },
+        "galaxy_id": 0,
+        "id": 2,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 839,
+              "y": 315
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Altair V",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 110,
+              "y": 480
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "New Boreal",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 780,
+              "y": 885
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Capella-D NS",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Neutron Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 865,
+              "y": 473
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "KT-882",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 809,
+              "y": 10
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "New Arcadia",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 904,
+              "y": 354
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "AX-656",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 370,
+              "y": 586
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [
+              8
+            ],
+            "name": "Nereid Minor",
+            "orbits_body_id": null,
+            "system_id": 2,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 358,
+              "y": 619
+            },
+            "has_market": true,
+            "id": 8,
+            "moons": [],
+            "name": "Guild Prime A-9",
+            "orbits_body_id": 7,
+            "system_id": 2,
+            "type": "Station"
+          }
+        ],
+        "name": "Omega-129",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 100,
+          "y": 247
+        },
+        "galaxy_id": 0,
+        "id": 3,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 747,
+              "y": 106
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Polaris VII",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 96,
+              "y": 980
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Procyon VIII D-8",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 144,
+              "y": 476
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [
+              10
+            ],
+            "name": "New Rhea",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 777,
+              "y": 67
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "New Haven",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 534,
+              "y": 276
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Boreal-10",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 505,
+              "y": 42
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Comet Arcadia-9",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Comet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 236,
+              "y": 280
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Procyon VIII V",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 332,
+              "y": 779
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "Procyon VIII VII",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 527,
+              "y": 905
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "Procyon VIII A-5",
+            "orbits_body_id": null,
+            "system_id": 3,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 167,
+              "y": 511
+            },
+            "has_market": true,
+            "id": 10,
+            "moons": [],
+            "name": "Freeport Harbor C-9",
+            "orbits_body_id": 3,
+            "system_id": 3,
+            "type": "Station"
+          }
+        ],
+        "name": "Procyon VIII",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 936,
+          "y": 612
+        },
+        "galaxy_id": 0,
+        "id": 4,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 720,
+              "y": 596
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Deneb VI",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 56,
+              "y": 238
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Auron Major",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 343,
+              "y": 444
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Comet Boreal-29",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Comet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 522,
+              "y": 193
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "KT-491",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 778,
+              "y": 337
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [
+              8
+            ],
+            "name": "Erebus Major",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 918,
+              "y": 8
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Deneb IX D-1",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 778,
+              "y": 905
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [
+              9
+            ],
+            "name": "New Rhea",
+            "orbits_body_id": null,
+            "system_id": 4,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 807,
+              "y": 297
+            },
+            "has_market": true,
+            "id": 8,
+            "moons": [],
+            "name": "Trade Prime B-2",
+            "orbits_body_id": 5,
+            "system_id": 4,
+            "type": "Station"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 745,
+              "y": 878
+            },
+            "has_market": true,
+            "id": 9,
+            "moons": [],
+            "name": "Guild Point C-6",
+            "orbits_body_id": 7,
+            "system_id": 4,
+            "type": "Station"
+          }
+        ],
+        "name": "Deneb IX",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 634,
+          "y": 722
+        },
+        "galaxy_id": 0,
+        "id": 5,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 497,
+              "y": 220
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Arcturus V",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 415,
+              "y": 220
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              9
+            ],
+            "name": "Helion-12",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 165,
+              "y": 379
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [
+              10
+            ],
+            "name": "New Auron",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 379,
+              "y": 718
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Vega-D NS",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Neutron Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 79,
+              "y": 261
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "CN-652",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 621,
+              "y": 574
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "RX-272",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 874,
+              "y": 985
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Capella-C B-7",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 112,
+              "y": 57
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "Capella-C C-3",
+            "orbits_body_id": null,
+            "system_id": 5,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 426,
+              "y": 249
+            },
+            "has_market": true,
+            "id": 9,
+            "moons": [],
+            "name": "Orbital Harbor F-9",
+            "orbits_body_id": 2,
+            "system_id": 5,
+            "type": "Station"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 140,
+              "y": 410
+            },
+            "has_market": true,
+            "id": 10,
+            "moons": [],
+            "name": "Dock Harbor C-4",
+            "orbits_body_id": 3,
+            "system_id": 5,
+            "type": "Station"
+          }
+        ],
+        "name": "Capella-C",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 597,
+          "y": 823
+        },
+        "galaxy_id": 0,
+        "id": 6,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 589,
+              "y": 996
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Bellatrix III",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 651,
+              "y": 61
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Frontier 19 F-3",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 108,
+              "y": 689
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "TR-427",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 489,
+              "y": 539
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Meridian Major",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 505,
+              "y": 875
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [
+              14
+            ],
+            "name": "New Haven",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 517,
+              "y": 380
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Boreal-7",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 823,
+              "y": 778
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "VB-612",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 960,
+              "y": 353
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "New Erebus",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 884,
+              "y": 429
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [
+              15
+            ],
+            "name": "Arcadia Point",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 634,
+              "y": 72
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [],
+            "name": "Talos Major",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 915,
+              "y": 202
+            },
+            "has_market": false,
+            "id": 11,
+            "moons": [],
+            "name": "Helion Major",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 954,
+              "y": 596
+            },
+            "has_market": false,
+            "id": 12,
+            "moons": [],
+            "name": "Frontier 19 B-5",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 614,
+              "y": 131
+            },
+            "has_market": false,
+            "id": 13,
+            "moons": [],
+            "name": "CN-283",
+            "orbits_body_id": null,
+            "system_id": 6,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 507,
+              "y": 844
+            },
+            "has_market": true,
+            "id": 14,
+            "moons": [],
+            "name": "Guild Point A-7",
+            "orbits_body_id": 5,
+            "system_id": 6,
+            "type": "Station"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 878,
+              "y": 433
+            },
+            "has_market": true,
+            "id": 15,
+            "moons": [],
+            "name": "Freeport Gate E-1",
+            "orbits_body_id": 9,
+            "system_id": 6,
+            "type": "Station"
+          }
+        ],
+        "name": "Frontier 19",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 314,
+          "y": 356
+        },
+        "galaxy_id": 0,
+        "id": 7,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 235,
+              "y": 592
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [
+              2
+            ],
+            "name": "Procyon II",
+            "orbits_body_id": null,
+            "system_id": 7,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 213,
+              "y": 597
+            },
+            "has_market": true,
+            "id": 2,
+            "moons": [],
+            "name": "Dock Station C-6",
+            "orbits_body_id": 1,
+            "system_id": 7,
+            "type": "Station"
+          }
+        ],
+        "name": "Zeta-967",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 782,
+          "y": 571
+        },
+        "galaxy_id": 0,
+        "id": 8,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 227,
+              "y": 741
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Sirius III",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 611,
+              "y": 683
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Polaris-B F-7",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 256,
+              "y": 798
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Polaris-B VI",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 937,
+              "y": 414
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "CN-809",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 842,
+              "y": 615
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "New Cyrene",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 430,
+              "y": 143
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Meridian Prime",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 852,
+              "y": 992
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [
+              16
+            ],
+            "name": "Astra Minor",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 752,
+              "y": 899
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "Polaris-B IX",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 312,
+              "y": 637
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "New Auron",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 139,
+              "y": 508
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [
+              17
+            ],
+            "name": "Arcadia-6",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 256,
+              "y": 954
+            },
+            "has_market": false,
+            "id": 11,
+            "moons": [],
+            "name": "Polaris-B D-8",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 787,
+              "y": 822
+            },
+            "has_market": false,
+            "id": 12,
+            "moons": [],
+            "name": "Polaris-B E-7",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 22,
+              "y": 907
+            },
+            "has_market": false,
+            "id": 13,
+            "moons": [],
+            "name": "Haven-8",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 911,
+              "y": 328
+            },
+            "has_market": false,
+            "id": 14,
+            "moons": [],
+            "name": "Polaris-B V",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 690,
+              "y": 960
+            },
+            "has_market": false,
+            "id": 15,
+            "moons": [],
+            "name": "Polaris-B F-9",
+            "orbits_body_id": null,
+            "system_id": 8,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 816,
+              "y": 999
+            },
+            "has_market": true,
+            "id": 16,
+            "moons": [],
+            "name": "Orbital Prime D-2",
+            "orbits_body_id": 7,
+            "system_id": 8,
+            "type": "Station"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 179,
+              "y": 534
+            },
+            "has_market": true,
+            "id": 17,
+            "moons": [],
+            "name": "Dock Outpost B-1",
+            "orbits_body_id": 10,
+            "system_id": 8,
+            "type": "Station"
+          }
+        ],
+        "name": "Polaris-B",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 84,
+          "y": 689
+        },
+        "galaxy_id": 0,
+        "id": 9,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 706,
+              "y": 57
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Antares IX",
+            "orbits_body_id": null,
+            "system_id": 9,
+            "type": "Star"
+          }
+        ],
+        "name": "Altair II",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 961,
+          "y": 521
+        },
+        "galaxy_id": 0,
+        "id": 10,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 184,
+              "y": 647
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Vega II",
+            "orbits_body_id": null,
+            "system_id": 10,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 308,
+              "y": 836
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              4
+            ],
+            "name": "New Talos",
+            "orbits_body_id": null,
+            "system_id": 10,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 819,
+              "y": 221
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Theta-627 D-9",
+            "orbits_body_id": null,
+            "system_id": 10,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 288,
+              "y": 824
+            },
+            "has_market": true,
+            "id": 4,
+            "moons": [],
+            "name": "Freeport Station E-2",
+            "orbits_body_id": 2,
+            "system_id": 10,
+            "type": "Station"
+          }
+        ],
+        "name": "Theta-627",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 358,
+          "y": 455
+        },
+        "galaxy_id": 0,
+        "id": 11,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 721,
+              "y": 557
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Bellatrix VI",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 284,
+              "y": 711
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Haven Major",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 424,
+              "y": 124
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Frontier 57 B-4",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 870,
+              "y": 409
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Nereid Minor",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 747,
+              "y": 149
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Frontier 57 VII",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 984,
+              "y": 300
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Erebus Major",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 34,
+              "y": 11
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Altair VIII",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 795,
+              "y": 579
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "KT-887",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 483,
+              "y": 770
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [
+              12
+            ],
+            "name": "Arcadia-3",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 218,
+              "y": 910
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [],
+            "name": "Frontier 57 E-2",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 547,
+              "y": 68
+            },
+            "has_market": false,
+            "id": 11,
+            "moons": [],
+            "name": "Frontier 57 VIII",
+            "orbits_body_id": null,
+            "system_id": 11,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 475,
+              "y": 778
+            },
+            "has_market": true,
+            "id": 12,
+            "moons": [],
+            "name": "Trade Station A-2",
+            "orbits_body_id": 9,
+            "system_id": 11,
+            "type": "Station"
+          }
+        ],
+        "name": "Frontier 57",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 838,
+          "y": 733
+        },
+        "galaxy_id": 0,
+        "id": 12,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 942,
+              "y": 355
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Rigel II",
+            "orbits_body_id": null,
+            "system_id": 12,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 564,
+              "y": 831
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "KT-922",
+            "orbits_body_id": null,
+            "system_id": 12,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 545,
+              "y": 509
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "New Meridian",
+            "orbits_body_id": null,
+            "system_id": 12,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 914,
+              "y": 282
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [
+              5
+            ],
+            "name": "Meridian Harbor",
+            "orbits_body_id": null,
+            "system_id": 12,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 874,
+              "y": 261
+            },
+            "has_market": true,
+            "id": 5,
+            "moons": [],
+            "name": "Dock Colony C-4",
+            "orbits_body_id": 4,
+            "system_id": 12,
+            "type": "Station"
+          }
+        ],
+        "name": "Bellatrix-D",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 909,
+          "y": 41
+        },
+        "galaxy_id": 0,
+        "id": 13,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 999,
+              "y": 178
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Polaris VI",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 691,
+              "y": 468
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              13
+            ],
+            "name": "Erebus-4",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 622,
+              "y": 538
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Capella-F IV",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 137,
+              "y": 955
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "TR-957",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 232,
+              "y": 920
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [
+              14
+            ],
+            "name": "New Meridian",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 891,
+              "y": 592
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Capella-F D-5",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 826,
+              "y": 263
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Arcadia Harbor",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 683,
+              "y": 999
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "RX-128",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 718,
+              "y": 627
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "Comet Auron-6",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Comet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 248,
+              "y": 220
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [],
+            "name": "Erebus Major",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Gas Giant"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 36,
+              "y": 840
+            },
+            "has_market": false,
+            "id": 11,
+            "moons": [],
+            "name": "RX-684",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 300,
+              "y": 920
+            },
+            "has_market": false,
+            "id": 12,
+            "moons": [],
+            "name": "Capella-F E-2",
+            "orbits_body_id": null,
+            "system_id": 13,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 690,
+              "y": 431
+            },
+            "has_market": true,
+            "id": 13,
+            "moons": [],
+            "name": "Dock Prime D-6",
+            "orbits_body_id": 2,
+            "system_id": 13,
+            "type": "Station"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 207,
+              "y": 922
+            },
+            "has_market": true,
+            "id": 14,
+            "moons": [],
+            "name": "Guild Harbor E-5",
+            "orbits_body_id": 5,
+            "system_id": 13,
+            "type": "Station"
+          }
+        ],
+        "name": "Capella-F",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 401,
+          "y": 555
+        },
+        "galaxy_id": 0,
+        "id": 14,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 470,
+              "y": 284
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Bellatrix I",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 470,
+              "y": 56
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Erebus-7",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 986,
+              "y": 724
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "VB-718",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 876,
+              "y": 325
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Deneb III F-3",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 936,
+              "y": 252
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Sirius-C NS",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Neutron Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 179,
+              "y": 62
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "AX-478",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 69,
+              "y": 58
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Cyrene-11",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 442,
+              "y": 44
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "Deneb III D-3",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 175,
+              "y": 142
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "CN-474",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 37,
+              "y": 302
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [
+              13
+            ],
+            "name": "New Vesper",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 812,
+              "y": 388
+            },
+            "has_market": false,
+            "id": 11,
+            "moons": [],
+            "name": "AX-878",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 700,
+              "y": 589
+            },
+            "has_market": false,
+            "id": 12,
+            "moons": [],
+            "name": "Deneb III VII",
+            "orbits_body_id": null,
+            "system_id": 14,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 35,
+              "y": 262
+            },
+            "has_market": true,
+            "id": 13,
+            "moons": [],
+            "name": "Trade Colony B-8",
+            "orbits_body_id": 10,
+            "system_id": 14,
+            "type": "Station"
+          }
+        ],
+        "name": "Deneb III",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 675,
+          "y": 647
+        },
+        "galaxy_id": 0,
+        "id": 15,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 114,
+              "y": 335
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Rigel I",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 142,
+              "y": 775
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "CN-353",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 545,
+              "y": 771
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "TR-921",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 566,
+              "y": 104
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Altair-F A-6",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 844,
+              "y": 671
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Deneb VIII",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 636,
+              "y": 34
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [
+              8
+            ],
+            "name": "Altair-F VIII",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 190,
+              "y": 233
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Comet Erebus-1",
+            "orbits_body_id": null,
+            "system_id": 15,
+            "type": "Comet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 669,
+              "y": 66
+            },
+            "has_market": true,
+            "id": 8,
+            "moons": [],
+            "name": "Trade Colony B-6",
+            "orbits_body_id": 6,
+            "system_id": 15,
+            "type": "Station"
+          }
+        ],
+        "name": "Altair-F",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 916,
+          "y": 183
+        },
+        "galaxy_id": 0,
+        "id": 16,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 569,
+              "y": 981
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Bellatrix III",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 469,
+              "y": 858
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "Vega-F IV",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 182,
+              "y": 764
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Krynn Minor",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 616,
+              "y": 939
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [
+              11
+            ],
+            "name": "Vega-F V",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 971,
+              "y": 635
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Vega-F VI",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 914,
+              "y": 722
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Vega-F E-2",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 167,
+              "y": 289
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Erebus Minor",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 332,
+              "y": 703
+            },
+            "has_market": false,
+            "id": 8,
+            "moons": [],
+            "name": "Rhea-8",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 283,
+              "y": 913
+            },
+            "has_market": false,
+            "id": 9,
+            "moons": [],
+            "name": "Vega-F F-9",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 491,
+              "y": 712
+            },
+            "has_market": false,
+            "id": 10,
+            "moons": [],
+            "name": "CN-749",
+            "orbits_body_id": null,
+            "system_id": 16,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 605,
+              "y": 954
+            },
+            "has_market": true,
+            "id": 11,
+            "moons": [],
+            "name": "Trade Colony B-4",
+            "orbits_body_id": 4,
+            "system_id": 16,
+            "type": "Station"
+          }
+        ],
+        "name": "Vega-F",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 97,
+          "y": 408
+        },
+        "galaxy_id": 0,
+        "id": 17,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 44,
+              "y": 60
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Procyon III",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 755,
+              "y": 184
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              8
+            ],
+            "name": "Theta-892 IV",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 374,
+              "y": 924
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Capella-A NS",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Neutron Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 360,
+              "y": 126
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Theta-892 A-1",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 268,
+              "y": 562
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Theta-892 C-1",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 175,
+              "y": 10
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "TR-555",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 421,
+              "y": 201
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "TR-388",
+            "orbits_body_id": null,
+            "system_id": 17,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 774,
+              "y": 164
+            },
+            "has_market": true,
+            "id": 8,
+            "moons": [],
+            "name": "Guild Gate A-6",
+            "orbits_body_id": 2,
+            "system_id": 17,
+            "type": "Station"
+          }
+        ],
+        "name": "Theta-892",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 388,
+          "y": 479
+        },
+        "galaxy_id": 0,
+        "id": 18,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 511,
+              "y": 333
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Polaris II",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 356,
+              "y": 463
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [],
+            "name": "AX-295",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Asteroid"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 879,
+              "y": 899
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Nereid Point",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 650,
+              "y": 114
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Deneb-B A-2",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 711,
+              "y": 815
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [
+              8
+            ],
+            "name": "Meridian Minor",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 138,
+              "y": 543
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Deneb-B F-3",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 794,
+              "y": 224
+            },
+            "has_market": false,
+            "id": 7,
+            "moons": [],
+            "name": "Astra Minor",
+            "orbits_body_id": null,
+            "system_id": 18,
+            "type": "Dwarf Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 674,
+              "y": 808
+            },
+            "has_market": true,
+            "id": 8,
+            "moons": [],
+            "name": "Dock Outpost E-9",
+            "orbits_body_id": 5,
+            "system_id": 18,
+            "type": "Station"
+          }
+        ],
+        "name": "Deneb-B",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 742,
+          "y": 959
+        },
+        "galaxy_id": 0,
+        "id": 19,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 205,
+              "y": 885
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Capella IV",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 518,
+              "y": 117
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              7
+            ],
+            "name": "Cyrene-4",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 836,
+              "y": 951
+            },
+            "has_market": false,
+            "id": 3,
+            "moons": [],
+            "name": "Deneb I",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 68,
+              "y": 451
+            },
+            "has_market": false,
+            "id": 4,
+            "moons": [],
+            "name": "Omega-305 C-5",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 33,
+              "y": 216
+            },
+            "has_market": false,
+            "id": 5,
+            "moons": [],
+            "name": "Omega-305 C-8",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Moon"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 696,
+              "y": 634
+            },
+            "has_market": false,
+            "id": 6,
+            "moons": [],
+            "name": "Omega-305 V",
+            "orbits_body_id": null,
+            "system_id": 19,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 516,
+              "y": 110
+            },
+            "has_market": true,
+            "id": 7,
+            "moons": [],
+            "name": "Trade Colony C-8",
+            "orbits_body_id": 2,
+            "system_id": 19,
+            "type": "Station"
+          }
+        ],
+        "name": "Omega-305",
+        "type": "solar"
+      },
+      {
+        "coordinates": {
+          "type": "galactic",
+          "x": 320,
+          "y": 669
+        },
+        "galaxy_id": 0,
+        "id": 20,
+        "members": [
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 941,
+              "y": 754
+            },
+            "has_market": false,
+            "id": 1,
+            "moons": [],
+            "name": "Bellatrix III",
+            "orbits_body_id": null,
+            "system_id": 20,
+            "type": "Star"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 644,
+              "y": 177
+            },
+            "has_market": false,
+            "id": 2,
+            "moons": [
+              3
+            ],
+            "name": "Rhea Point",
+            "orbits_body_id": null,
+            "system_id": 20,
+            "type": "Planet"
+          },
+          {
+            "coordinates": {
+              "type": "local",
+              "x": 607,
+              "y": 203
+            },
+            "has_market": true,
+            "id": 3,
+            "moons": [],
+            "name": "Dock Prime B-6",
+            "orbits_body_id": 2,
+            "system_id": 20,
+            "type": "Station"
+          }
+        ],
+        "name": "Nova 42",
+        "type": "solar"
+      }
+    ],
+    "coordinates": {
+      "type": "glactic",
+      "x": 0,
+      "y": 0
+    },
+    "id": 0,
+    "name": "Cygnus Veil",
+    "system_markets": {
+      "1": {
+        "food": {
+          "name": "Food Rations",
+          "price": 20,
+          "stock": 12
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 156,
+          "stock": 9
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 235,
+          "stock": 32
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 65,
+          "stock": 29
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 235,
+          "stock": 29
+        }
+      },
+      "10": {
+        "food": {
+          "name": "Food Rations",
+          "price": 21,
+          "stock": 57
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 154,
+          "stock": 22
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 252,
+          "stock": 14
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 90,
+          "stock": 41
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 172,
+          "stock": 14
+        }
+      },
+      "11": {
+        "food": {
+          "name": "Food Rations",
+          "price": 19,
+          "stock": 23
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 93,
+          "stock": 31
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 264,
+          "stock": 41
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 43,
+          "stock": 47
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 201,
+          "stock": 49
+        }
+      },
+      "12": {
+        "food": {
+          "name": "Food Rations",
+          "price": 44,
+          "stock": 30
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 110,
+          "stock": 38
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 297,
+          "stock": 16
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 44,
+          "stock": 32
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 166,
+          "stock": 47
+        }
+      },
+      "13": {
+        "food": {
+          "name": "Food Rations",
+          "price": 27,
+          "stock": 35
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 141,
+          "stock": 48
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 240,
+          "stock": 23
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 86,
+          "stock": 51
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 164,
+          "stock": 56
+        }
+      },
+      "14": {
+        "food": {
+          "name": "Food Rations",
+          "price": 21,
+          "stock": 14
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 113,
+          "stock": 47
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 276,
+          "stock": 14
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 93,
+          "stock": 39
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 201,
+          "stock": 33
+        }
+      },
+      "15": {
+        "food": {
+          "name": "Food Rations",
+          "price": 46,
+          "stock": 42
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 162,
+          "stock": 52
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 264,
+          "stock": 25
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 74,
+          "stock": 20
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 219,
+          "stock": 13
+        }
+      },
+      "16": {
+        "food": {
+          "name": "Food Rations",
+          "price": 36,
+          "stock": 25
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 98,
+          "stock": 52
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 285,
+          "stock": 30
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 84,
+          "stock": 39
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 232,
+          "stock": 43
+        }
+      },
+      "17": {
+        "food": {
+          "name": "Food Rations",
+          "price": 79,
+          "stock": 13
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 153,
+          "stock": 47
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 256,
+          "stock": 60
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 55,
+          "stock": 40
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 207,
+          "stock": 16
+        }
+      },
+      "18": {
+        "food": {
+          "name": "Food Rations",
+          "price": 32,
+          "stock": 53
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 159,
+          "stock": 59
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 229,
+          "stock": 16
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 43,
+          "stock": 21
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 182,
+          "stock": 34
+        }
+      },
+      "19": {
+        "food": {
+          "name": "Food Rations",
+          "price": 20,
+          "stock": 12
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 142,
+          "stock": 39
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 250,
+          "stock": 9
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 120,
+          "stock": 58
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 187,
+          "stock": 43
+        }
+      },
+      "2": {
+        "food": {
+          "name": "Food Rations",
+          "price": 22,
+          "stock": 20
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 125,
+          "stock": 40
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 270,
+          "stock": 49
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 119,
+          "stock": 51
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 212,
+          "stock": 33
+        }
+      },
+      "20": {
+        "food": {
+          "name": "Food Rations",
+          "price": 59,
+          "stock": 37
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 98,
+          "stock": 33
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 227,
+          "stock": 47
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 118,
+          "stock": 38
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 225,
+          "stock": 24
+        }
+      },
+      "3": {
+        "food": {
+          "name": "Food Rations",
+          "price": 39,
+          "stock": 13
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 165,
+          "stock": 27
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 295,
+          "stock": 32
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 99,
+          "stock": 44
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 174,
+          "stock": 17
+        }
+      },
+      "4": {
+        "food": {
+          "name": "Food Rations",
+          "price": 29,
+          "stock": 54
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 92,
+          "stock": 37
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 301,
+          "stock": 25
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 50,
+          "stock": 24
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 222,
+          "stock": 28
+        }
+      },
+      "5": {
+        "food": {
+          "name": "Food Rations",
+          "price": 52,
+          "stock": 40
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 160,
+          "stock": 59
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 275,
+          "stock": 49
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 91,
+          "stock": 13
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 162,
+          "stock": 49
+        }
+      },
+      "6": {
+        "food": {
+          "name": "Food Rations",
+          "price": 49,
+          "stock": 59
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 93,
+          "stock": 53
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 301,
+          "stock": 47
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 76,
+          "stock": 48
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 197,
+          "stock": 50
+        }
+      },
+      "7": {
+        "food": {
+          "name": "Food Rations",
+          "price": 81,
+          "stock": 12
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 86,
+          "stock": 31
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 301,
+          "stock": 10
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 87,
+          "stock": 29
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 207,
+          "stock": 24
+        }
+      },
+      "8": {
+        "food": {
+          "name": "Food Rations",
+          "price": 86,
+          "stock": 31
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 132,
+          "stock": 42
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 290,
+          "stock": 57
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 107,
+          "stock": 57
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 223,
+          "stock": 53
+        }
+      },
+      "9": {
+        "food": {
+          "name": "Food Rations",
+          "price": 35,
+          "stock": 28
+        },
+        "fuel": {
+          "name": "Refined Fuel",
+          "price": 160,
+          "stock": 8
+        },
+        "med": {
+          "name": "Medical Supplies",
+          "price": 266,
+          "stock": 25
+        },
+        "ore": {
+          "name": "Raw Ore",
+          "price": 108,
+          "stock": 33
+        },
+        "parts": {
+          "name": "Ship Parts",
+          "price": 208,
+          "stock": 58
+        }
+      }
+    },
+    "type": "galaxy"
+  },
+  "save_version": 1,
+  "saved_at": "2026-02-22T08:20:27+00:00",
+  "ship": {
+    "cargo_capacity": 20,
+    "cargo_manifest": {},
+    "credits": 2000,
+    "current_localID": 10,
+    "current_systemID": 3,
+    "engine_power": 100,
+    "fuel": 97,
+    "is_docked": false,
+    "lifesupport_power": 100,
+    "name": "Enterprise-D",
+    "resources": 0,
+    "scanned_long_range_systems": [
+      3
+    ],
+    "scanned_short_range_systems": [
+      3
+    ],
+    "selected_jump_system_id": 3,
+    "selected_local_id": 1,
+    "shields": 100,
+    "structure": 100,
+    "visited_locations_by_system": {
+      "3": [
+        1,
+        10
+      ]
+    },
+    "visited_systems": [
+      3
+    ]
+  },
+  "slot": 1
+}

@@ -2,7 +2,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header
 from components.MainInterface.MainInterface import MainInterface
 from components.ShipControls.ShipControls import ShipControls
-from components.SelectionMenu.SelectionMenu import SelectionMenu
+from components.ShipComms.ShipComms import ShipComms
 from components.ViewPort.ViewPort import ViewPort
 from objects.Ship.Ship import Ship
 from objects.Galaxy.Galaxy import Galaxy
@@ -13,6 +13,9 @@ class SpaceTrader(App):
     BINDINGS = [
         ("j", "open_jump_nav", "Jump to System"),
         ("g", "open_local_nav", "Goto Local Destination"),
+        ("t", "toggle_market_sort", "Toggle Market Sort"),
+        ("ctrl+s", "save_game", "Save Game"),
+        ("ctrl+l", "load_game", "Load Game"),
         ("up", "select_prev_target", "Previous Target"),
         ("down", "select_next_target", "Next Target"),
         ("enter", "confirm_target", "Open Actions"),
@@ -37,40 +40,50 @@ class SpaceTrader(App):
         self.query_one(ShipControls).action_open_local_nav()
         self.query_one(ViewPort).focus()
 
+    def action_save_game(self) -> None:
+        self.query_one(ShipControls).action_save_game()
+        self.query_one(ViewPort).focus()
+
+    def action_load_game(self) -> None:
+        self.query_one(ShipControls).action_load_game()
+        self.query_one(ViewPort).focus()
+
+    def action_toggle_market_sort(self) -> None:
+        self.query_one(ShipControls).action_toggle_market_sort()
+        self.query_one(ViewPort).focus()
+
     def action_select_prev_target(self) -> None:
-        popup = self._get_active_selection_menu()
-        if popup:
-            popup.query_one("#optionlist").action_cursor_up()
+        comms_menu = self._get_active_comms_menu()
+        if comms_menu:
+            comms_menu.menu_cursor_up()
             return
         self.query_one(ShipControls).action_select_prev_target()
 
     def action_select_next_target(self) -> None:
-        popup = self._get_active_selection_menu()
-        if popup:
-            popup.query_one("#optionlist").action_cursor_down()
+        comms_menu = self._get_active_comms_menu()
+        if comms_menu:
+            comms_menu.menu_cursor_down()
             return
         self.query_one(ShipControls).action_select_next_target()
 
     def action_confirm_target(self) -> None:
-        popup = self._get_active_selection_menu()
-        if popup:
-            popup.action_confirm()
+        comms_menu = self._get_active_comms_menu()
+        if comms_menu:
+            comms_menu.menu_confirm()
             return
         self.query_one(ShipControls).action_confirm_target()
 
     def action_cancel_popup(self) -> None:
-        popup = self._get_active_selection_menu()
-        if popup:
-            popup.action_cancel()
+        comms_menu = self._get_active_comms_menu()
+        if comms_menu:
+            comms_menu.menu_cancel()
+            self.query_one(ShipControls).refresh_action_preview()
+            return
 
-    def _get_active_selection_menu(self):
-        viewport = self.query_one(ViewPort)
-        content = viewport.query_one("#viewport_content")
-        if not content.children:
-            return None
-        active_widget = content.children[0]
-        if isinstance(active_widget, SelectionMenu):
-            return active_widget
+    def _get_active_comms_menu(self):
+        comms = self.query_one(ShipComms)
+        if comms.has_active_menu():
+            return comms
         return None
 
     # def action_toggle_dark(self) -> None:

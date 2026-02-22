@@ -73,3 +73,27 @@ class CelestialSystem():
             self.members.append(station)
             body.moons.append(station.id)
             next_id += 1
+
+    def to_dict(self) -> dict:
+        return {
+            "coordinates": self.coordinates.to_dict(),
+            "name": self.name,
+            "id": self.id,
+            "type": self.type,
+            "galaxy_id": self.galaxy_id,
+            "members": [member.to_dict() for member in self.members],
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        coords_data = data.get("coordinates", {})
+        coords = (int(coords_data.get("x", 0)), int(coords_data.get("y", 0)))
+        system = cls(
+            coord=coords,
+            name=data.get("name", "Unknown System"),
+            id=int(data.get("id", 0)),
+            type=data.get("type", "solar"),
+            galaxy_id=int(data.get("galaxy_id", 0)),
+        )
+        system.members = [CelestialBody.from_dict(member) for member in data.get("members", [])]
+        return system

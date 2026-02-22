@@ -1,18 +1,25 @@
 from textual.containers import HorizontalGroup, VerticalGroup
 from textual.widgets import Label
 from rich.text import Text
+from pathlib import Path
+from datetime import datetime
 from ..ViewPort.ViewPort import ViewPort
 from ..ShipLog.ShipLog import ShipLog
 from ..LocationIndicator.LocationIndicator import LocationIndicator
 from ..ShipStats.ShipStats import ShipStats
 from ..LongRangeVisualizer.LongRangeVisualizer import LongRangeVisualizer
 from ..SystemVisualizer.SystemVisualizer import SystemVisualizer
+from ..ShipComms.ShipComms import ShipComms
+from objects.SaveGame import save_game, load_game, get_save_slot_summaries
 
 class ShipControls(HorizontalGroup):
 
     BINDINGS = [
         ("j", "open_jump_nav", "Jump to System"),
         ("g", "open_local_nav", "Goto Local Destination"),
+        ("t", "toggle_market_sort", "Toggle Market Sort"),
+        ("ctrl+s", "save_game", "Save Game"),
+        ("ctrl+l", "load_game", "Load Game"),
         ("up", "select_prev_target", "Previous Target"),
         ("down", "select_next_target", "Next Target"),
         ("enter", "confirm_target", "Open Actions"),
@@ -21,17 +28,22 @@ class ShipControls(HorizontalGroup):
     def __init__(self, ship, id=None):
         self.ship = ship
         self.pending_action = None
-        self.trade_option_map = {}
+        self.market_sort_mode = "name"
+        self.active_trade_menu_mode = None
+        self.trade_selected_commodity_id = None
         super().__init__(id=id)
 
     def compose(self):
         with VerticalGroup():
             yield Label("", id="hint_jump", markup=False)
             yield Label("", id="hint_local", markup=False)
-            yield Label("[Up/Down] Select  [Enter] Actions", id="hint_target", markup=False)
+            yield Label("[Up/Down] Select", id="hint_select", markup=False)
+            yield Label("[Enter] Actions", id="hint_action", markup=False)
+            yield Label("[T] Sort | [Ctrl+S] Save | [Ctrl+L] Load", id="hint_save", markup=False)
 
     def on_mount(self) -> None:
         self.refresh_action_buttons()
+        self.call_after_refresh(self.refresh_action_preview)
 
     def action_btn_longrange(self) -> None:
         get_log = self.app.query_one(ShipLog)
@@ -57,6 +69,7 @@ class ShipControls(HorizontalGroup):
         get_log = self.app.query_one(ShipLog)
         if not self.ship.has_current_system_short_range_scan():
             self.action_btn_shortrange()
+            self._update_comms_action_preview()
             return
         get_viewport = self.app.query_one(ViewPort)
         if self._is_cartography_active(get_viewport) and get_viewport.display_mode == "short":
@@ -73,11 +86,13 @@ class ShipControls(HorizontalGroup):
             get_log.update_log(
                 f"Local target mode: {selected_body.name} selected. Use Up/Down and Enter for actions."
             )
+        self._update_comms_action_preview()
 
     def action_open_jump_nav(self) -> None:
         get_log = self.app.query_one(ShipLog)
         if not self.ship.has_current_system_long_range_scan():
             self.action_btn_longrange()
+            self._update_comms_action_preview()
             return
         get_viewport = self.app.query_one(ViewPort)
         if self._is_cartography_active(get_viewport) and get_viewport.display_mode == "long":
@@ -92,6 +107,7 @@ class ShipControls(HorizontalGroup):
         get_log.update_log(
             f"Jump target mode: {selected_system.name} selected. Use Up/Down and Enter for actions."
         )
+        self._update_comms_action_preview()
 
     def _open_trade_console(self) -> None:
         get_log = self.app.query_one(ShipLog)
@@ -99,10 +115,10 @@ class ShipControls(HorizontalGroup):
         if not current_body.has_market:
             get_log.update_log("Trade console unavailable. Navigate to an orbital station with a market.")
             return
+        self.active_trade_menu_mode = None
+        self.trade_selected_commodity_id = None
         option_list = ["Buy Cargo", "Sell Cargo", "Close Console"]
-        get_viewport = self.app.query_one(ViewPort)
-        get_viewport.present_options(
-            id="trade_mode",
+        self.app.query_one(ShipComms).open_menu(
             option_values=option_list,
             title="Trade Console: Select Operation",
             callback=self.behaviour_trade_mode,
@@ -124,6 +140,7 @@ class ShipControls(HorizontalGroup):
             self._open_trade_inventory_menu("sell")
             return
         self.app.query_one(ShipLog).update_log("Trade console closed.")
+        self._update_comms_action_preview()
 
     def behaviour_shortrange(self) -> None:
         self.ship.mark_short_range_scan()
@@ -132,6 +149,7 @@ class ShipControls(HorizontalGroup):
         get_log.update_log("Callback: Short Range Scan Complete (saved to ship memory)")
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_system_visual()
+        self._update_comms_action_preview()
 
     def behaviour_longrange(self) -> None:
         self.ship.mark_long_range_scan()
@@ -140,6 +158,7 @@ class ShipControls(HorizontalGroup):
         get_log.update_log("Callback: Long Range Scan Complete (saved to ship memory)")
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_longrange_visual()
+        self._update_comms_action_preview()
 
     def behaviour_jump(self, id) -> None:
         id = int(id)
@@ -218,6 +237,7 @@ class ShipControls(HorizontalGroup):
         get_locationwidget.update_system(id)
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.present_system_visual()
+        self.call_after_refresh(self.refresh_action_preview)
 
     def _complete_local_travel(self, id: int, fuel_cost: int) -> None:
         self.ship.spend_fuel(fuel_cost)
@@ -240,6 +260,7 @@ class ShipControls(HorizontalGroup):
         get_locationwidget.update_location(id)
         get_viewport = self.app.query_one(ViewPort)
         get_viewport.refresh_current_display()
+        self.call_after_refresh(self.refresh_action_preview)
 
     def _travel_animation_interval(self, distance: float, travel_type: str) -> int:
         if travel_type == "jump":
@@ -248,75 +269,256 @@ class ShipControls(HorizontalGroup):
             target_seconds = max(1.0, min(6.0, distance / 250.0))
         return max(5, int(100 / target_seconds))
 
-    def _open_trade_inventory_menu(self, mode: str) -> None:
+    def _open_trade_inventory_menu(self, mode: str, selected_commodity_id: str | None = None) -> None:
         current_system_id = self.ship.get_current_system()
         market = self.ship.galaxy.system_markets.get(current_system_id, {})
+        self.active_trade_menu_mode = mode
+        if selected_commodity_id is not None:
+            self.trade_selected_commodity_id = selected_commodity_id
+        selected_commodity_id = self.trade_selected_commodity_id
         option_values = []
-        self.trade_option_map = {}
+        selected_index = 0
+        row_index = 0
 
-        for commodity_id, data in market.items():
+        for commodity_id, data in self._sorted_market_items(market):
             your_qty = self.ship.cargo_manifest.get(commodity_id, 0)
-            option_text = (
-                f"{data['name']} | {data['price']} cr | "
-                f"Stock {data['stock']} | You {your_qty}"
-            )
-            option_values.append(option_text)
-            self.trade_option_map[option_text] = commodity_id
+            commodity_name = data["name"]
+            if len(commodity_name) > 10:
+                commodity_name = f"{commodity_name[:9]}."
+            commodity_name = f"{commodity_name:<10}"
+            price_text = f"{data['price']:>4}"
+            stock_text = f"{data['stock']:>3}"
+            your_text = f"{your_qty:>3}"
+            option_label = Text()
+            option_label.append(commodity_name, style="white")
+            option_label.append(" | ", style="grey50")
+            option_label.append(price_text, style="bold yellow")
+            option_label.append(" cr", style="white")
+            option_label.append(" | ", style="grey50")
+            option_label.append("Stock ", style="white")
+            option_label.append(stock_text, style=self._stock_style(data["stock"]))
+            option_label.append(" | ", style="grey50")
+            option_label.append("You ", style="white")
+            option_label.append(your_text, style=self._cargo_style(your_qty))
+            option_values.append((option_label, commodity_id))
+            if selected_commodity_id is not None and commodity_id == selected_commodity_id:
+                selected_index = row_index
+            row_index += 1
 
-        option_values.append("Back")
-        title = f"Station Market ({mode.upper()} 1 unit)"
-        self.app.query_one(ViewPort).present_options(
-            id="market_menu",
+        option_values.append(("Back", "Back"))
+        title = f"Station Market ({mode.upper()} | Sort: {self._market_sort_indicator()})"
+        self.app.query_one(ShipComms).open_menu(
             option_values=option_values,
             title=title,
             callback=lambda text: self.behaviour_trade_pick(mode, text),
+            selected_index=selected_index,
         )
 
-    def behaviour_trade_pick(self, mode: str, option_text: str) -> None:
-        if option_text == "Back":
+    def behaviour_trade_pick(self, mode: str, option_value: str) -> None:
+        if option_value == "Back":
             self._open_trade_console()
             return
-        commodity_id = self.trade_option_map.get(option_text)
-        if not commodity_id:
+        commodity_id = str(option_value)
+        market = self.ship.galaxy.system_markets.get(self.ship.get_current_system(), {})
+        if commodity_id not in market:
             self.app.query_one(ShipLog).update_log("Trade failed: invalid commodity selection.")
             self._open_trade_inventory_menu(mode)
             return
-        self._execute_trade_by_commodity(mode, commodity_id)
-        self._open_trade_inventory_menu(mode)
+        self.trade_selected_commodity_id = commodity_id
+        self._open_trade_quantity_menu(mode, commodity_id)
 
-    def _execute_trade_by_commodity(self, mode: str, commodity_id: str) -> None:
+    def _open_trade_quantity_menu(self, mode: str, commodity_id: str) -> None:
+        self.active_trade_menu_mode = None
+        market_item = self.ship.galaxy.system_markets[self.ship.get_current_system()][commodity_id]
+        commodity_name = market_item["name"]
+        quantity_options = [(f"+{qty} units", qty) for qty in (1, 5, 10)]
+        quantity_options.append(("Back", "Back"))
+        title = f"{mode.upper()} Quantity: {commodity_name}"
+        self.app.query_one(ShipComms).open_menu(
+            option_values=quantity_options,
+            title=title,
+            callback=lambda value: self.behaviour_trade_quantity_pick(mode, commodity_id, value),
+        )
+
+    def behaviour_trade_quantity_pick(self, mode: str, commodity_id: str, option_value) -> None:
+        if option_value == "Back":
+            self._open_trade_inventory_menu(mode, selected_commodity_id=commodity_id)
+            return
+        quantity = int(option_value)
+        self._execute_trade_by_commodity(mode, commodity_id, quantity=quantity)
+        self._open_trade_inventory_menu(mode, selected_commodity_id=commodity_id)
+
+    def _stock_style(self, stock: int) -> str:
+        if stock >= 20:
+            return "bold green"
+        if stock >= 8:
+            return "bold yellow"
+        return "bold red"
+
+    def _cargo_style(self, quantity: int) -> str:
+        if quantity > 0:
+            return "bold cyan"
+        return "grey50"
+
+    def action_save_game(self) -> None:
+        self._open_save_load_slot_menu("save")
+
+    def action_load_game(self) -> None:
+        self._open_save_load_slot_menu("load")
+
+    def _open_save_load_slot_menu(self, mode: str) -> None:
+        summaries = get_save_slot_summaries()
+        option_values = []
+        for summary in summaries:
+            slot = summary["slot"]
+            label = Text()
+            label.append("Slot ", style="white")
+            label.append(f"{slot}", style="bold cyan")
+            label.append(" | ", style="grey50")
+            if summary["exists"]:
+                saved_at = self._format_saved_at_short(summary.get("saved_at"))
+                size_kb = summary["size_bytes"] / 1024.0
+                label.append(f"{saved_at:16}", style="green")
+                label.append(" | ", style="grey50")
+                label.append(f"{size_kb:>6.1f}", style="bold yellow")
+                label.append(" KB", style="white")
+            else:
+                label.append(f"{'EMPTY':16}", style="red")
+                label.append(" | ", style="grey50")
+                label.append("  --.- KB", style="grey50")
+            option_values.append((label, slot))
+
+        option_values.append(("Cancel", "cancel"))
+        title = "Save Game: Choose Slot" if mode == "save" else "Load Game: Choose Slot"
+        self.app.query_one(ShipComms).open_menu(
+            option_values=option_values,
+            title=title,
+            callback=lambda text: self.behaviour_save_load_slot_pick(mode, text),
+        )
+
+    def behaviour_save_load_slot_pick(self, mode: str, option_value) -> None:
+        get_log = self.app.query_one(ShipLog)
+        if option_value == "cancel":
+            get_log.update_log("Save/Load canceled.")
+            return
+
+        slot = int(option_value)
+
+        if mode == "save":
+            try:
+                save_path = save_game(self.ship, slot=slot)
+            except Exception as exc:
+                get_log.update_log(f"Save failed: {exc}")
+                return
+            relative_path = Path(save_path).as_posix()
+            get_log.update_log(f"Progress saved to slot {slot} ({relative_path})")
+            return
+
+        try:
+            save_path = load_game(self.ship, slot=slot)
+        except FileNotFoundError:
+            get_log.update_log(f"Load failed: slot {slot} is empty.")
+            return
+        except Exception as exc:
+            get_log.update_log(f"Load failed: {exc}")
+            return
+
+        self.pending_action = None
+        self.active_trade_menu_mode = None
+        self.refresh_action_buttons()
+        self.app.query_one(ShipStats).refresh_from_ship()
+        location_widget = self.app.query_one(LocationIndicator)
+        location_widget.update_system(self.ship.get_current_system())
+        location_widget.update_location(self.ship.get_current_location())
+        viewport = self.app.query_one(ViewPort)
+        viewport.refresh_current_display()
+        relative_path = Path(save_path).as_posix()
+        get_log.update_log(f"Progress loaded from slot {slot} ({relative_path})")
+        self.call_after_refresh(self.refresh_action_preview)
+
+    def _execute_trade_by_commodity(self, mode: str, commodity_id: str, quantity: int = 1) -> None:
         get_log = self.app.query_one(ShipLog)
         system_id = self.ship.get_current_system()
         market_item = self.ship.galaxy.system_markets[system_id][commodity_id]
         commodity_name = market_item["name"]
         price = market_item["price"]
+        quantity = max(1, int(quantity))
 
         if mode == "buy":
-            if self.ship.galaxy.market_stock(system_id, commodity_id) < 1:
+            market_stock = self.ship.galaxy.market_stock(system_id, commodity_id)
+            if market_stock < quantity:
                 get_log.update_log(f"{commodity_name} is out of stock.")
                 return
-            can_buy, reason = self.ship.can_buy(price, quantity=1)
+            can_buy, reason = self.ship.can_buy(price, quantity=quantity)
             if not can_buy:
                 get_log.update_log(f"Purchase failed: {reason}")
                 return
-            self.ship.buy_commodity(commodity_id, price, quantity=1)
-            self.ship.galaxy.market_decrease_stock(system_id, commodity_id, quantity=1)
+            total_cost = price * quantity
+            self.ship.buy_commodity(commodity_id, price, quantity=quantity)
+            self.ship.galaxy.market_decrease_stock(system_id, commodity_id, quantity=quantity)
             self.app.query_one(ShipStats).refresh_from_ship()
             get_log.update_log(
-                f"Bought 1 {commodity_name} for {price} cr | Credits: {self.ship.credits} | Cargo: {self.ship.get_cargo_used()}/{self.ship.cargo_capacity}"
+                f"Bought {quantity} {commodity_name} for {total_cost} cr | Credits: {self.ship.credits} | Cargo: {self.ship.get_cargo_used()}/{self.ship.cargo_capacity}"
             )
             return
 
-        can_sell, reason = self.ship.can_sell(commodity_id, quantity=1)
+        can_sell, reason = self.ship.can_sell(commodity_id, quantity=quantity)
         if not can_sell:
             get_log.update_log(f"Sale failed: {reason}")
             return
-        self.ship.sell_commodity(commodity_id, price, quantity=1)
-        self.ship.galaxy.market_increase_stock(system_id, commodity_id, quantity=1)
+        total_revenue = price * quantity
+        self.ship.sell_commodity(commodity_id, price, quantity=quantity)
+        self.ship.galaxy.market_increase_stock(system_id, commodity_id, quantity=quantity)
         self.app.query_one(ShipStats).refresh_from_ship()
         get_log.update_log(
-            f"Sold 1 {commodity_name} for {price} cr | Credits: {self.ship.credits} | Cargo: {self.ship.get_cargo_used()}/{self.ship.cargo_capacity}"
+            f"Sold {quantity} {commodity_name} for {total_revenue} cr | Credits: {self.ship.credits} | Cargo: {self.ship.get_cargo_used()}/{self.ship.cargo_capacity}"
         )
+
+    def action_toggle_market_sort(self) -> None:
+        comms = self.app.query_one(ShipComms)
+        if self.active_trade_menu_mode and comms.has_active_menu():
+            self.market_sort_mode = self._next_market_sort_mode()
+            self._open_trade_inventory_menu(
+                self.active_trade_menu_mode,
+                selected_commodity_id=self.trade_selected_commodity_id,
+            )
+            return
+        self.app.query_one(ShipLog).update_log("Sort toggle available in Station Market list only.")
+
+    def _next_market_sort_mode(self) -> str:
+        modes = ("name", "price", "stock", "owned")
+        current_index = modes.index(self.market_sort_mode)
+        return modes[(current_index + 1) % len(modes)]
+
+    def _sorted_market_items(self, market: dict) -> list[tuple[str, dict]]:
+        items = list(market.items())
+        if self.market_sort_mode == "price":
+            return sorted(items, key=lambda item: item[1]["price"])
+        if self.market_sort_mode == "stock":
+            return sorted(items, key=lambda item: item[1]["stock"], reverse=True)
+        if self.market_sort_mode == "owned":
+            return sorted(items, key=lambda item: self.ship.cargo_manifest.get(item[0], 0), reverse=True)
+        return sorted(items, key=lambda item: item[1]["name"])
+
+    def _market_sort_indicator(self) -> str:
+        if self.market_sort_mode == "name":
+            return "NAME ↑"
+        if self.market_sort_mode == "price":
+            return "PRICE ↑"
+        if self.market_sort_mode == "stock":
+            return "STOCK ↓"
+        return "OWNED ↓"
+
+    def _format_saved_at_short(self, saved_at: str | None) -> str:
+        if not saved_at:
+            return "Unknown"
+        try:
+            normalized = saved_at.replace("Z", "+00:00")
+            parsed = datetime.fromisoformat(normalized)
+            return parsed.strftime("%Y-%m-%d %H:%M")
+        except ValueError:
+            stripped = saved_at.replace("T", " ")
+            return stripped[:16] if len(stripped) >= 16 else stripped
 
     def action_select_prev_target(self) -> None:
         self._move_target_selection(-1)
@@ -339,24 +541,25 @@ class ShipControls(HorizontalGroup):
         get_log = self.app.query_one(ShipLog)
         if not self._is_cartography_active(get_viewport):
             get_log.update_log("Target selection unavailable. Open [J] jump navigation or [G] local navigation first.")
+            self._update_comms_action_preview()
             return
         if get_viewport.display_mode == "long" and self.ship.has_current_system_long_range_scan():
-            selected_id = self.ship.shift_selected_jump(step)
-            selected_system = self.ship.galaxy.get_celestial_system(selected_id)
+            self.ship.shift_selected_jump(step)
             get_viewport.refresh_current_display()
-            get_log.update_log(f"Jump target selected: {selected_system.name}. Enter for actions.")
+            self._update_comms_action_preview()
             return
         if get_viewport.display_mode == "long":
             get_log.update_log("Long-range targets unavailable. Press [J] to scan current system first.")
+            self._update_comms_action_preview()
             return
         if get_viewport.display_mode == "short" and self.ship.has_current_system_short_range_scan():
-            selected_id = self.ship.shift_selected_local(step)
-            selected_body = self.ship.galaxy.get_celestial_system(self.ship.get_current_system()).members[selected_id - 1]
+            self.ship.shift_selected_local(step)
             get_viewport.refresh_current_display()
-            get_log.update_log(f"Local target selected: {selected_body.name}. Enter for actions.")
+            self._update_comms_action_preview()
             return
         if get_viewport.display_mode == "short":
             get_log.update_log("Local targets unavailable. Press [G] to scan current system first.")
+            self._update_comms_action_preview()
 
     def _open_longrange_action_menu(self) -> None:
         target_id = self.ship.get_selected_jump_system_id()
@@ -365,8 +568,7 @@ class ShipControls(HorizontalGroup):
             return
         target_system = self.ship.galaxy.get_celestial_system(target_id)
         self.pending_action = ("jump", target_id)
-        self.app.query_one(ViewPort).present_options(
-            id="target_action_menu",
+        self.app.query_one(ShipComms).open_menu(
             option_values=[f"Jump to {target_system.name}"],
             title="Target Actions",
             callback=self.behaviour_target_action,
@@ -402,8 +604,7 @@ class ShipControls(HorizontalGroup):
             return
 
         self.pending_action = ("local", action_map)
-        self.app.query_one(ViewPort).present_options(
-            id="target_action_menu",
+        self.app.query_one(ShipComms).open_menu(
             option_values=options,
             title=f"Target Actions: {target_body.name}",
             callback=self.behaviour_target_action,
@@ -466,5 +667,91 @@ class ShipControls(HorizontalGroup):
         local_label.append("]oto Local Destination ", style="white")
         local_label.append(f"({local_status})", style="dim")
 
+        select_label = Text()
+        select_label.append("[", style="white")
+        select_label.append("Up/Down", style="bold yellow")
+        select_label.append("] Select", style="white")
+
+        action_label = Text()
+        action_label.append("[", style="white")
+        action_label.append("Enter", style="bold magenta")
+        action_label.append("] Actions", style="white")
+
+        save_label = Text()
+        save_label.append("[", style="white")
+        save_label.append("T", style="bold yellow")
+        save_label.append("] Sort  |  ", style="white")
+        save_label.append("[", style="white")
+        save_label.append("Ctrl+S", style="bold cyan")
+        save_label.append("] Save  |  ", style="white")
+        save_label.append("[", style="white")
+        save_label.append("Ctrl+L", style="bold green")
+        save_label.append("] Load", style="white")
+
         self.query_one("#hint_jump", Label).update(jump_label)
         self.query_one("#hint_local", Label).update(local_label)
+        self.query_one("#hint_select", Label).update(select_label)
+        self.query_one("#hint_action", Label).update(action_label)
+        self.query_one("#hint_save", Label).update(save_label)
+
+    def _update_comms_action_preview(self) -> None:
+        comms = self.app.query_one(ShipComms)
+        if comms.has_active_menu():
+            return
+
+        viewport = self.app.query_one(ViewPort)
+        if not self._is_cartography_active(viewport):
+            comms.clear_action_preview()
+            return
+
+        if viewport.display_mode == "long":
+            if not self.ship.has_current_system_long_range_scan():
+                comms.show_action_preview("Long Cartography", ["Run long-range scan first"])
+                return
+            target_id = self.ship.get_selected_jump_system_id()
+            target_system = self.ship.galaxy.get_celestial_system(target_id)
+            if target_id == self.ship.get_current_system():
+                comms.show_action_preview(target_system.name, ["Already in current system"])
+                return
+            comms.show_action_preview(target_system.name, [f"Jump to {target_system.name}"])
+            return
+
+        if not self.ship.has_current_system_short_range_scan():
+            comms.show_action_preview("Local Cartography", ["Run short-range scan first"])
+            return
+
+        system = self.ship.galaxy.get_celestial_system(self.ship.get_current_system())
+        target_id = self.ship.get_selected_local_id()
+        if target_id <= 0:
+            comms.show_action_preview(system.name, ["No local target selected"])
+            return
+        target_body = system.members[target_id - 1]
+        is_current = target_id == self.ship.get_current_location()
+        preview_options = []
+        if not is_current:
+            preview_options.append(f"Travel to {target_body.name}")
+        elif target_body.has_market:
+            preview_options.append("Open Trade Console")
+        elif target_body.type in {"Planet", "Gas Giant", "Dwarf Planet", "Moon"}:
+            preview_options.extend(["Dock or Land", "Extract Resources"])
+
+        comms.show_action_preview(target_body.name, preview_options)
+
+    def refresh_action_preview(self) -> None:
+        self._refresh_action_preview_with_retry(retries=5, delay=0.05)
+
+    def _refresh_action_preview_with_retry(self, retries: int, delay: float) -> None:
+        comms = self.app.query_one(ShipComms)
+        if comms.has_active_menu():
+            return
+
+        viewport = self.app.query_one(ViewPort)
+        if self._is_cartography_active(viewport):
+            self._update_comms_action_preview()
+            return
+
+        if retries > 0:
+            self.set_timer(delay, lambda: self._refresh_action_preview_with_retry(retries - 1, delay))
+            return
+
+        self._update_comms_action_preview()

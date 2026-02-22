@@ -19,32 +19,82 @@
 ShipStats{
     border: solid green;
     padding: 0;
-    height: 14;
+    height: 10;
     align: center middle;
 }
 
 ShipControls {
     border: solid green;
     padding: 0;
-    height: 10;
+    height: 15;
     align: center middle;
 }
 
 ShipControls > VerticalGroup > Label{
     width: 100%;
-    content-align: center middle;
+    content-align: left middle;
+    padding: 0 1;
 }
 
 ShipComms{
     border: solid green;
+    height: 14;
     padding: 0;
     width: 100%;
-    align: center middle;
+    align: center top;
+}
+
+ShipComms.comms-idle{
+    border: solid green;
+    background: rgb(6, 20, 10);
+}
+
+ShipComms.comms-active{
+    border: heavy yellow;
+    background: rgb(35, 28, 0);
 }
 
 ShipComms > Log{
-    height: 10;
+    height: 5;
     scrollbar-size: 0 1;
+}
+
+#comms_menu_box{
+    height: 1fr;
+    border-top: solid $primary 30%;
+    padding: 0 1;
+}
+
+#comms_menu_title{
+    width: 100%;
+    content-align: center middle;
+    color: $accent;
+    text-style: bold;
+}
+
+ShipComms.comms-active #comms_menu_title{
+    color: black;
+    background: yellow;
+    text-style: bold;
+}
+
+#comms_menu_options{
+    height: 1fr;
+}
+
+ShipComms.comms-active #comms_menu_options{
+    border: solid yellow;
+}
+
+#comms_menu_hint{
+    width: 100%;
+    content-align: center middle;
+    color: grey;
+}
+
+ShipComms.comms-active #comms_menu_hint{
+    color: yellow;
+    text-style: bold;
 }
 
 Log{
@@ -52,24 +102,11 @@ Log{
     scrollbar-size: 0 1;    
 }
 
-Button {
-    margin: 1;
-    border: none;
-    text-style: none;
-    height: 2;
-}
-
-Switch {
-    margin: 1 1;
-    padding: 0;
-    border: none;
-    height: 1;
-}
-
 ShipLog{
     border: solid green;
     padding: 0;
     width: 100%;
+    height: 12;
 }
 
 ShipLog > Log{
@@ -79,7 +116,7 @@ ShipLog > Log{
 
 ViewPort{
     width: 100%;
-    height: 24;
+    height: 27;
     border: solid purple;
 }
 
@@ -90,6 +127,14 @@ ViewPort > LocationIndicator{
     align: center top;
     border-bottom: solid $primary 30%;
     margin-bottom: 0;
+}
+
+#viewport_mode_indicator{
+    width: 100%;
+    height: 1;
+    content-align: center middle;
+    color: $accent;
+    text-style: bold;
 }
 
 #viewport_content{
@@ -110,7 +155,7 @@ ViewPort > LocationIndicator{
     padding: 0 1;
 }
 
-#viewport_empty{
+.viewport_empty{
     width: 100%;
     height: 100%;
     content-align: center middle;
@@ -127,37 +172,6 @@ ViewPort > StatusBar{
     width: 100%;
     content-align: center middle;
     align: center middle;
-}
-
-
-SelectionMenu{
-    width: 50;
-    height: 11;
-    align: center top;
-    border: solid blue;
-}
-
-SelectionMenu > Label{
-    color: red;
-    width: 50;
-    content-align: center middle;
-}
-
-TableList{
-    width: 62;
-    height: 17;
-    align: center top;
-    border: solid blue;
-}
-
-TableList > .datatable_data{
-    height: 10;
-}
-
-TableList > Label{
-    color: pink;
-    width: 50;
-    content-align: center middle;
 }
 
 

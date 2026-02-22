@@ -101,30 +101,30 @@
 ## 6) Technical Plan (Phased)
 
 ### Phase 1: Economy MVP
-- Add commodities + per-system markets
-- Add buy/sell UI flow in viewport
-- Add player wallet, cargo manifest, fuel costs
-- Add save/load game state (JSON or sqlite)
+- [x] Add commodities + per-system markets
+- [x] Add buy/sell UI flow in viewport/comms panel
+- [x] Add player wallet, cargo manifest, fuel costs
+- [x] Add save/load game state (JSON, multi-slot)
 
 ### Phase 2: Travel Risk + Encounters
-- Add encounter generator on travel completion
-- Add hazard outcomes to stats/resources
-- Add inspect/flee/engage choices
+- [ ] Add encounter generator on travel completion
+- [ ] Add hazard outcomes to stats/resources
+- [ ] Add inspect/flee/engage choices
 
 ### Phase 3: Combat and AI
-- Add turn-based combat resolution
-- Add NPC ship archetypes and loot tables
-- Add combat logs and repair loop
+- [ ] Add turn-based combat resolution
+- [ ] Add NPC ship archetypes and loot tables
+- [ ] Add combat logs and repair loop
 
 ### Phase 4: Factions + Missions
-- Reputation modifiers on trade/combat actions
-- Mission board with faction-specific rewards
-- Dynamic system control events
+- [ ] Reputation modifiers on trade/combat actions
+- [ ] Mission board with faction-specific rewards
+- [ ] Dynamic system control events
 
 ### Phase 5: LLM Enhancements
-- Add narration + NPC dialogue provider abstraction
-- Implement schema-validated text generation
-- Add local/offline template fallback
+- [ ] Add narration + NPC dialogue provider abstraction
+- [ ] Implement schema-validated text generation
+- [ ] Add local/offline template fallback
 
 ## 7) UX and Interface Ideas
 - Split viewport tabs:
@@ -143,11 +143,11 @@
 - Scanning intelligence should materially reduce ambush risk.
 
 ## 9) Immediate Next Sprint (Concrete)
-1. Implement commodities + market UI.
-2. Add wallet/cargo/fuel tracking to ship stats.
-3. Add travel encounter roll with simple outcomes.
-4. Add first hostile NPC encounter (pirate) with minimal combat choice.
-5. Add save/load to persist progression.
+- [x] Implement commodities + market UI.
+- [x] Add wallet/cargo/fuel tracking to ship stats.
+- [ ] Add travel encounter roll with simple outcomes.
+- [ ] Add first hostile NPC encounter (pirate) with minimal combat choice.
+- [x] Add save/load to persist progression.
 
 ## 10) Open Design Questions
 - Is the game single-captain roguelike or long campaign?
@@ -155,7 +155,7 @@
 - How simulation-heavy should markets be vs gamey and readable?
 - Should LLM be optional flavor or also drive mission structure?
 
-## 11) Current Prototype Status (2026-02-17)
+## 11) Current Prototype Status (2026-02-22)
 
 ### Implemented Foundation
 - Added station/market-oriented world scaffolding:
@@ -170,28 +170,38 @@
   - Status bars are aligned and stable.
   - Resource row shows `Credits | Cargo | Fuel`.
   - Fuel value is color-coded by level.
+- Starting visibility setup:
+  - New games start with current system long-range + short-range scan already unlocked.
 
 ### Implemented Trading Loop
 - Trading is available only at station locations (`has_market=True`).
 - Station action flow:
   - Open local actions on selected location.
   - If selected current location is a station, `Open Trade Console` is available.
-- Trade console flow is keyboard-first:
+- Trade console flow is keyboard-first and integrated into `ShipComms`:
   - Choose `Buy Cargo` / `Sell Cargo`.
-  - Choose commodity from menu and trade 1 unit per confirm.
+  - Commodity list uses aligned columns with color-coded numeric values.
+  - Trade quantity picker supports `+1`, `+5`, `+10`.
+  - Returning from quantity picker keeps previously selected commodity highlighted.
   - Market stock and player credits/cargo update immediately.
+- Market sorting:
+  - `[T]` cycles sort modes while market list is open:
+    - `NAME ↑`, `PRICE ↑`, `STOCK ↓`, `OWNED ↓`.
 
 ### Implemented Navigation + Cartography Flow
 - Primary navigation is keyboard-first:
   - `[J]` Jump navigation
   - `[G]` Goto local destination
+  - `[T]` market sort toggle (market list only)
+  - `[Ctrl+S]` save
+  - `[Ctrl+L]` load
   - `Up/Down` select target
-  - `Enter` open action menu / confirm popup
-  - `Esc` cancel popup
+  - `Enter` open action menu / confirm
+  - `Esc` cancel active command menu
 - Cartography-based targeting:
   - No jump/local destination popup tables.
   - Target selection occurs directly on long/local cartography.
-  - Action popup appears for selected target (`Jump`, `Travel`, `Trade`, `Dock`, `Extract` as applicable).
+  - Action menu appears in `ShipComms` panel for selected target (`Jump`, `Travel`, `Trade`, `Dock`, `Extract` as applicable).
 - Jump arrival behavior:
   - Auto-marks long-range scan for new system.
   - Auto-scans local cartography if needed.
@@ -207,12 +217,32 @@
   - Sorted by distance ascending from current local ship position.
 
 ### UX/Technical Notes
-- Popups are keyboard-only (no required mouse interaction).
-- Popup close behavior restores cartography reliably to avoid blank viewport states.
+- Action menus are integrated into right-side `ShipComms` (no modal viewport popups).
+- `ShipComms` supports:
+  - active command menu state,
+  - idle state,
+  - live action preview while moving target selection.
 - Global app-level key bindings route to game actions to reduce focus-related shortcut failures.
+- Added compact viewport mode indicator line (`Mode: ...`) to show context (`Long Cartography`, `Local Cartography`, `Action Menu`, `Progress`).
+- Reduced selection-change log spam (no per-arrow key log entries).
+- Fixed local cartography ship-anchor resolution to use actual current location id (not sorted-list index).
+
+### Save/Load Status
+- Save/load is implemented for expanded game state with JSON persistence:
+  - Galaxy systems/members/markets.
+  - Ship resources, cargo, scans, visited sets, selections, current position.
+- Multi-slot save support:
+  - `saves/slot1.json`, `slot2.json`, `slot3.json`.
+  - Save/load slot picker integrated in `ShipComms`.
+  - Slot rows show compact timestamp and file size.
+  - Legacy load fallback from `saves/savegame.json` for slot 1.
+
+### Documentation + Cleanup Status
+- README updated to reflect current controls and gameplay flow.
+- Removed obsolete popup menu components and related CSS (`SelectionMenu`, `TableList`) after full `ShipComms` integration.
 
 ### Suggested Next Work Session
-1. Add persistent save/load for the expanded game state (credits, fuel, cargo, markets, selections, scans).
-2. Add encounter roll hooks to jump/local completion (even with simple placeholder outcomes).
-3. Replace placeholder `Dock/Land` and `Extract` outcomes with real resource/economy effects.
-4. Add compact on-screen mode indicator (e.g., `Long Cartography`, `Local Cartography`, `Action Menu`) to make keyboard context explicit.
+1. Add encounter roll hooks to jump/local completion (simple deterministic placeholder outcomes first).
+2. Implement first hostile NPC encounter (pirate) with minimal `fight/flee` resolution.
+3. Replace placeholder `Dock/Land` and `Extract` callbacks with real resource/economy effects.
+4. Add a lightweight event summary panel/history for recent travel outcomes and encounter results.

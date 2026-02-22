@@ -49,7 +49,7 @@ class SystemVisualizer(Static):
             self.update("SYSTEM CARTOGRAPHY OFFLINE\nNo objects found in this system.")
             return
 
-        ship_body = members[max(0, min(local_id - 1, len(members) - 1))]
+        ship_body = next((member for member in members if member.id == local_id), members[0])
         distances = [
             member.coordinates.get_distance(ship_body.coordinates) for member in members
         ]

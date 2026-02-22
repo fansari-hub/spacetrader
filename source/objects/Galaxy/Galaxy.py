@@ -92,3 +92,49 @@ class Galaxy():
                 "stock": stock,
             }
         return market
+
+    def to_dict(self) -> dict:
+        return {
+            "coordinates": self.coordinates.to_dict(),
+            "name": self.name,
+            "id": self.id,
+            "type": self.type,
+            "celestial_systems": [system.to_dict() for system in self.celestial_systems],
+            "system_markets": {
+                str(system_id): {
+                    commodity_id: {
+                        "name": commodity_data.get("name", ""),
+                        "price": int(commodity_data.get("price", 0)),
+                        "stock": int(commodity_data.get("stock", 0)),
+                    }
+                    for commodity_id, commodity_data in market.items()
+                }
+                for system_id, market in self.system_markets.items()
+            },
+        }
+
+    def apply_state(self, data: dict) -> None:
+        self.name = data.get("name", self.name)
+        self.id = int(data.get("id", self.id))
+        self.type = data.get("type", self.type)
+
+        coords_data = data.get("coordinates", {})
+        self.coordinates.x = int(coords_data.get("x", self.coordinates.x))
+        self.coordinates.y = int(coords_data.get("y", self.coordinates.y))
+        self.coordinates.type = coords_data.get("type", self.coordinates.type)
+
+        self.celestial_systems = [
+            CelestialSystem.from_dict(system_data)
+            for system_data in data.get("celestial_systems", [])
+        ]
+
+        self.system_markets = {}
+        for system_id, market in data.get("system_markets", {}).items():
+            sid = int(system_id)
+            self.system_markets[sid] = {}
+            for commodity_id, commodity_data in market.items():
+                self.system_markets[sid][commodity_id] = {
+                    "name": commodity_data.get("name", commodity_id),
+                    "price": int(commodity_data.get("price", 0)),
+                    "stock": int(commodity_data.get("stock", 0)),
+                }
