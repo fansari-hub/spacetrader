@@ -13,6 +13,7 @@ class SpaceTrader(App):
     BINDINGS = [
         ("j", "open_jump_nav", "Jump to System"),
         ("g", "open_local_nav", "Goto Local Destination"),
+        ("c", "open_cargo_nav", "Cargo Manifest"),
         ("t", "toggle_market_sort", "Toggle Market Sort"),
         ("ctrl+s", "save_game", "Save Game"),
         ("ctrl+l", "load_game", "Load Game"),
@@ -38,6 +39,10 @@ class SpaceTrader(App):
 
     def action_open_local_nav(self) -> None:
         self.query_one(ShipControls).action_open_local_nav()
+        self.query_one(ViewPort).focus()
+
+    def action_open_cargo_nav(self) -> None:
+        self.query_one(ShipControls).action_open_cargo_nav()
         self.query_one(ViewPort).focus()
 
     def action_save_game(self) -> None:

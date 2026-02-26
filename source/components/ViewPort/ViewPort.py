@@ -4,6 +4,7 @@ from ..StatusBar.StatusBar import StatusBar
 from ..LocationIndicator.LocationIndicator import LocationIndicator
 from ..SystemVisualizer.SystemVisualizer import SystemVisualizer
 from ..LongRangeVisualizer.LongRangeVisualizer import LongRangeVisualizer
+from ..CargoVisualizer.CargoVisualizer import CargoVisualizer
 
 
 class ViewPort(VerticalGroup):
@@ -13,6 +14,7 @@ class ViewPort(VerticalGroup):
         self.ship = ship
         self.galaxy = galaxy
         self.display_mode = "short"
+        self.selected_cargo_id = None
         super().__init__(id=id)
 
     def compose(self):
@@ -49,7 +51,22 @@ class ViewPort(VerticalGroup):
         self.display_mode = "long"
         self.refresh_current_display()
 
+    def present_cargo_visual(self, selected_cargo_id: str | None = None) -> None:
+        self.display_mode = "cargo"
+        self.selected_cargo_id = selected_cargo_id
+        self.refresh_current_display()
+
     def refresh_current_display(self) -> None:
+        if self.display_mode == "cargo":
+            self._replace_viewport_content(
+                CargoVisualizer(
+                    ship=self.ship,
+                    selected_cargo_id=self.selected_cargo_id,
+                )
+            )
+            self._set_mode_indicator("Cargo Manifest")
+            return
+
         if self.display_mode == "long":
             if not self.ship.has_current_system_long_range_scan():
                 self._present_blank("LONG-RANGE CARTOGRAPHY UNAVAILABLE\nRun Long-range Scan in this system.")

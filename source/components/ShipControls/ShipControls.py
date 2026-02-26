@@ -9,15 +9,28 @@ from ..LocationIndicator.LocationIndicator import LocationIndicator
 from ..ShipStats.ShipStats import ShipStats
 from ..LongRangeVisualizer.LongRangeVisualizer import LongRangeVisualizer
 from ..SystemVisualizer.SystemVisualizer import SystemVisualizer
+from ..CargoVisualizer.CargoVisualizer import CargoVisualizer
 from ..ShipComms.ShipComms import ShipComms
 from objects.SaveGame import save_game, load_game, get_save_slot_summaries
 from objects.EncounterEngine import resolve_travel_encounter
+from objects.MarketConfig import MARKET_COMMODITY_NAME_BY_ID
+from objects.ExtractionConfig import (
+    EXTRACTABLE_BODY_TYPES as EXTRACTABLE_BODY_TYPES_CONFIG,
+    EXTRACTION_BATCH_MIN_UNITS,
+    EXTRACTION_BATCH_MAX_UNITS,
+    RESOURCE_DEF_BY_ID,
+    classify_resource_descriptor,
+)
+from random import choices, randint
 
 class ShipControls(HorizontalGroup):
+    DOCKABLE_BODY_TYPES = {"Planet", "Moon"}
+    EXTRACTABLE_BODY_TYPES = EXTRACTABLE_BODY_TYPES_CONFIG
 
     BINDINGS = [
         ("j", "open_jump_nav", "Jump to System"),
         ("g", "open_local_nav", "Goto Local Destination"),
+        ("c", "open_cargo_nav", "Cargo Manifest"),
         ("t", "toggle_market_sort", "Toggle Market Sort"),
         ("ctrl+s", "save_game", "Save Game"),
         ("ctrl+l", "load_game", "Load Game"),
@@ -32,12 +45,14 @@ class ShipControls(HorizontalGroup):
         self.market_sort_mode = "name"
         self.active_trade_menu_mode = None
         self.trade_selected_commodity_id = None
+        self.selected_cargo_item_id = None
         super().__init__(id=id)
 
     def compose(self):
         with VerticalGroup():
             yield Label("", id="hint_jump", markup=False)
             yield Label("", id="hint_local", markup=False)
+            yield Label("", id="hint_cargo", markup=False)
             yield Label("[Up/Down] Select", id="hint_select", markup=False)
             yield Label("[Enter] Actions", id="hint_action", markup=False)
             yield Label("[T] Sort | [Ctrl+S] Save | [Ctrl+L] Load", id="hint_save", markup=False)
@@ -110,6 +125,23 @@ class ShipControls(HorizontalGroup):
         )
         self._update_comms_action_preview()
 
+    def action_open_cargo_nav(self) -> None:
+        get_viewport = self.app.query_one(ViewPort)
+        if self._is_cartography_active(get_viewport) and get_viewport.display_mode == "cargo":
+            self._open_cargo_action_menu()
+            return
+        selected_cargo_id = self._get_selected_cargo_id()
+        get_viewport.present_cargo_visual(selected_cargo_id=selected_cargo_id)
+        get_log = self.app.query_one(ShipLog)
+        if selected_cargo_id is None:
+            get_log.update_log("Cargo manifest opened. Hold is empty.")
+        else:
+            cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(selected_cargo_id, selected_cargo_id.title())
+            get_log.update_log(
+                f"Cargo mode: {cargo_name} selected. Use Up/Down and Enter for actions."
+            )
+        self._update_comms_action_preview()
+
     def _open_trade_console(self) -> None:
         get_log = self.app.query_one(ShipLog)
         current_body = self.ship.get_current_body()
@@ -129,9 +161,148 @@ class ShipControls(HorizontalGroup):
         get_log = self.app.query_one(ShipLog)
         get_log.update_log("Callback: Docked with " + text)
 
-    def behaviour_extract(self, text) -> None:
+    def behaviour_extract(self, target_id: int) -> None:
         get_log = self.app.query_one(ShipLog)
-        get_log.update_log("Callback: Extracted some " + text)      
+        system = self.ship.galaxy.get_celestial_system(self.ship.get_current_system())
+        if target_id <= 0 or target_id > len(system.members):
+            get_log.update_log("Extraction failed: invalid target.")
+            return
+        target_body = system.members[target_id - 1]
+        if not self._can_extract_resources(target_body):
+            get_log.update_log("Extraction failed: target has no extractable mineral deposits.")
+            return
+
+        if target_body.get_resource_total() <= 0:
+            get_log.update_log(f"{target_body.name} resource field is depleted.")
+            return
+
+        if not target_body.extraction_scanned:
+            message = Text("Initiating resource survey on ")
+            message.append(target_body.name, style="bold cyan")
+            message.append("...")
+            get_log.update_log(message)
+            self.app.query_one(ViewPort).present_loadbar(
+                label="Resource Survey",
+                targetvalue=100,
+                animation_interval=28,
+                callback=lambda: self._complete_extract_scan(target_id),
+            )
+            return
+
+        self._extract_resources_from_body(target_id)
+
+    def _complete_extract_scan(self, target_id: int) -> None:
+        get_log = self.app.query_one(ShipLog)
+        system = self.ship.galaxy.get_celestial_system(self.ship.get_current_system())
+        if target_id <= 0 or target_id > len(system.members):
+            get_log.update_log("Survey aborted: target no longer available.")
+            self.app.query_one(ViewPort).refresh_current_display()
+            self._update_comms_action_preview()
+            return
+
+        target_body = system.members[target_id - 1]
+        if not self._can_extract_resources(target_body):
+            get_log.update_log("Survey aborted: target is not extractable.")
+            self.app.query_one(ViewPort).refresh_current_display()
+            self._update_comms_action_preview()
+            return
+
+        target_body.extraction_scanned = True
+        survey_header = Text("Resource survey complete: ")
+        survey_header.append(target_body.name, style="bold cyan")
+        get_log.update_log(survey_header)
+
+        total_units = target_body.get_resource_total()
+        if total_units <= 0:
+            get_log.update_log("No recoverable deposits detected.")
+            self.app.query_one(ViewPort).refresh_current_display()
+            self._update_comms_action_preview()
+            return
+
+        for resource_id, quantity in sorted(
+            target_body.extractable_resources.items(),
+            key=lambda entry: entry[1],
+            reverse=True,
+        ):
+            resource_def = RESOURCE_DEF_BY_ID.get(resource_id, {"name": resource_id.title(), "style": "white"})
+            descriptor = classify_resource_descriptor(quantity, total_units)
+            line = Text(" - ", style="dim")
+            line.append(resource_def["name"], style=resource_def["style"])
+            line.append(": ", style="white")
+            line.append(descriptor["label"], style=descriptor["style"])
+            get_log.update_log(line)
+
+        get_log.update_log("Survey logged. Run Extract Resources again to begin harvesting.")
+        self.app.query_one(ViewPort).refresh_current_display()
+        self._update_comms_action_preview()
+
+    def _extract_resources_from_body(self, target_id: int) -> None:
+        get_log = self.app.query_one(ShipLog)
+        system = self.ship.galaxy.get_celestial_system(self.ship.get_current_system())
+        target_body = system.members[target_id - 1]
+        total_available = target_body.get_resource_total()
+        if total_available <= 0:
+            get_log.update_log(f"{target_body.name} resource field is depleted.")
+            return
+
+        free_cargo = self.ship.get_cargo_free()
+        if free_cargo <= 0:
+            get_log.update_log("Extraction aborted: cargo hold is full.")
+            return
+
+        batch_target = min(
+            randint(EXTRACTION_BATCH_MIN_UNITS, EXTRACTION_BATCH_MAX_UNITS),
+            total_available,
+            free_cargo,
+        )
+        if batch_target <= 0:
+            get_log.update_log("Extraction aborted: no recoverable units.")
+            return
+
+        gains = {}
+        for _ in range(batch_target):
+            available_ids = [rid for rid, qty in target_body.extractable_resources.items() if qty > 0]
+            if not available_ids:
+                break
+            weights = [target_body.extractable_resources[rid] for rid in available_ids]
+            picked_id = choices(available_ids, weights=weights, k=1)[0]
+            target_body.extractable_resources[picked_id] -= 1
+            if target_body.extractable_resources[picked_id] <= 0:
+                target_body.extractable_resources.pop(picked_id, None)
+            gains[picked_id] = gains.get(picked_id, 0) + 1
+
+        if not gains:
+            get_log.update_log("Extraction yielded no recoverable material.")
+            return
+
+        for resource_id, quantity in gains.items():
+            self.ship.cargo_manifest[resource_id] = self.ship.cargo_manifest.get(resource_id, 0) + quantity
+
+        message = Text("Extracted ")
+        message.append(str(sum(gains.values())), style="bold green")
+        message.append(" units from ")
+        message.append(target_body.name, style="bold cyan")
+        message.append(": ", style="white")
+        first = True
+        for resource_id, quantity in sorted(gains.items(), key=lambda entry: entry[1], reverse=True):
+            if not first:
+                message.append(", ", style="white")
+            resource_def = RESOURCE_DEF_BY_ID.get(resource_id, {"name": resource_id.title(), "style": "white"})
+            message.append(resource_def["name"], style=resource_def["style"])
+            message.append(f" +{quantity}", style="bold green")
+            first = False
+        get_log.update_log(message)
+
+        remaining = target_body.get_resource_total()
+        remaining_message = Text("Remaining deposits: ")
+        remaining_message.append(str(remaining), style="bold yellow" if remaining > 0 else "bold red")
+        remaining_message.append(" units.")
+        get_log.update_log(remaining_message)
+        if remaining <= 0:
+            get_log.update_log(f"{target_body.name} is now depleted.")
+
+        self.app.query_one(ShipStats).refresh_from_ship()
+        self._update_comms_action_preview()
 
     def behaviour_trade_mode(self, text) -> None:
         if text == "Buy Cargo":
@@ -508,6 +679,7 @@ class ShipControls(HorizontalGroup):
 
         self.pending_action = None
         self.active_trade_menu_mode = None
+        self.selected_cargo_item_id = None
         self.refresh_action_buttons()
         self.app.query_one(ShipStats).refresh_from_ship()
         location_widget = self.app.query_one(LocationIndicator)
@@ -592,6 +764,42 @@ class ShipControls(HorizontalGroup):
             return "STOCK ↓"
         return "OWNED ↓"
 
+    def _ordered_cargo_ids(self) -> list[str]:
+        cargo_ids = [
+            cargo_id
+            for cargo_id, quantity in self.ship.cargo_manifest.items()
+            if int(quantity) > 0
+        ]
+        return sorted(
+            cargo_ids,
+            key=lambda cargo_id: (
+                MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title()),
+                cargo_id,
+            ),
+        )
+
+    def _get_selected_cargo_id(self) -> str | None:
+        ordered = self._ordered_cargo_ids()
+        if not ordered:
+            self.selected_cargo_item_id = None
+            return None
+        if self.selected_cargo_item_id not in ordered:
+            self.selected_cargo_item_id = ordered[0]
+        return self.selected_cargo_item_id
+
+    def _shift_selected_cargo(self, step: int) -> str | None:
+        ordered = self._ordered_cargo_ids()
+        if not ordered:
+            self.selected_cargo_item_id = None
+            return None
+        current = self._get_selected_cargo_id()
+        if current not in ordered:
+            self.selected_cargo_item_id = ordered[0]
+            return self.selected_cargo_item_id
+        idx = ordered.index(current)
+        self.selected_cargo_item_id = ordered[(idx + step) % len(ordered)]
+        return self.selected_cargo_item_id
+
     def _format_saved_at_short(self, saved_at: str | None) -> str:
         if not saved_at:
             return "Unknown"
@@ -613,6 +821,9 @@ class ShipControls(HorizontalGroup):
         get_viewport = self.app.query_one(ViewPort)
         if not self._is_cartography_active(get_viewport):
             return
+        if get_viewport.display_mode == "cargo":
+            self._open_cargo_action_menu()
+            return
         if get_viewport.display_mode == "long" and self.ship.has_current_system_long_range_scan():
             self._open_longrange_action_menu()
             return
@@ -623,7 +834,13 @@ class ShipControls(HorizontalGroup):
         get_viewport = self.app.query_one(ViewPort)
         get_log = self.app.query_one(ShipLog)
         if not self._is_cartography_active(get_viewport):
-            get_log.update_log("Target selection unavailable. Open [J] jump navigation or [G] local navigation first.")
+            get_log.update_log("Target selection unavailable. Open [J], [G], or [C] navigation first.")
+            self._update_comms_action_preview()
+            return
+        if get_viewport.display_mode == "cargo":
+            self._shift_selected_cargo(step)
+            get_viewport.selected_cargo_id = self._get_selected_cargo_id()
+            get_viewport.refresh_current_display()
             self._update_comms_action_preview()
             return
         if get_viewport.display_mode == "long" and self.ship.has_current_system_long_range_scan():
@@ -675,11 +892,13 @@ class ShipControls(HorizontalGroup):
             trade_label = "Open Trade Console"
             options.append(trade_label)
             action_map[trade_label] = ("trade", target_id)
-        elif target_body.type in {"Planet", "Gas Giant", "Dwarf Planet", "Moon"}:
+        elif self._can_dock_or_land(target_body):
             dock_label = "Dock or Land"
-            extract_label = "Extract Resources"
-            options.extend([dock_label, extract_label])
+            options.append(dock_label)
             action_map[dock_label] = ("dock", target_id)
+        elif self._can_extract_resources(target_body):
+            extract_label = "Extract Resources"
+            options.append(extract_label)
             action_map[extract_label] = ("extract", target_id)
 
         if not options:
@@ -693,6 +912,86 @@ class ShipControls(HorizontalGroup):
             callback=self.behaviour_target_action,
         )
 
+    def _open_cargo_action_menu(self) -> None:
+        cargo_id = self._get_selected_cargo_id()
+        if cargo_id is None:
+            self.app.query_one(ShipLog).update_log("Cargo hold is empty. No actions available.")
+            return
+        cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+        self.pending_action = ("cargo", cargo_id)
+        self.app.query_one(ShipComms).open_menu(
+            option_values=["Eject Cargo"],
+            title=f"Cargo Actions: {cargo_name}",
+            callback=self.behaviour_target_action,
+        )
+
+    def _open_eject_confirmation_menu(self, cargo_id: str) -> None:
+        cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+        current_qty = int(self.ship.cargo_manifest.get(cargo_id, 0))
+        if current_qty <= 0:
+            self.app.query_one(ShipLog).update_log("Ejection failed: selected cargo no longer available.")
+            self._update_comms_action_preview()
+            return
+        quantity_options = []
+        for quantity in (1, 5, 10):
+            if current_qty >= quantity:
+                quantity_options.append((f"Eject {quantity} {cargo_name}", quantity))
+        if not quantity_options:
+            quantity_options.append((f"Eject 1 {cargo_name}", 1))
+        quantity_options.append(("Cancel", "cancel"))
+        self.app.query_one(ShipComms).open_menu(
+            option_values=quantity_options,
+            title=f"Eject Quantity: {cargo_name} (Available: {current_qty})",
+            callback=lambda option: self._handle_eject_quantity_pick(cargo_id, option),
+        )
+
+    def _handle_eject_quantity_pick(self, cargo_id: str, option_value) -> None:
+        if option_value == "cancel":
+            self.app.query_one(ShipLog).update_log("Cargo ejection canceled.")
+            self._update_comms_action_preview()
+            return
+        quantity = int(option_value)
+        self._open_eject_final_confirmation_menu(cargo_id, quantity)
+
+    def _open_eject_final_confirmation_menu(self, cargo_id: str, quantity: int) -> None:
+        cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+        option_values = [
+            (f"Confirm Eject {quantity} {cargo_name}", "confirm_eject"),
+            ("Cancel", "cancel"),
+        ]
+        self.app.query_one(ShipComms).open_menu(
+            option_values=option_values,
+            title=f"Confirm Ejection: {cargo_name} x{quantity}",
+            callback=lambda option: self._handle_eject_confirmation(cargo_id, quantity, option),
+        )
+
+    def _handle_eject_confirmation(self, cargo_id: str, quantity: int, option_value: str) -> None:
+        if option_value != "confirm_eject":
+            self.app.query_one(ShipLog).update_log("Cargo ejection canceled.")
+            self._update_comms_action_preview()
+            return
+        current_qty = int(self.ship.cargo_manifest.get(cargo_id, 0))
+        cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+        if current_qty < quantity or quantity <= 0:
+            self.app.query_one(ShipLog).update_log("Ejection failed: selected cargo no longer available.")
+            self._update_comms_action_preview()
+            return
+
+        new_qty = current_qty - quantity
+        if new_qty > 0:
+            self.ship.cargo_manifest[cargo_id] = new_qty
+        else:
+            self.ship.cargo_manifest.pop(cargo_id, None)
+            if self.selected_cargo_item_id == cargo_id:
+                self.selected_cargo_item_id = None
+
+        self.app.query_one(ShipLog).update_log(f"Ejected {quantity} unit(s) of {cargo_name}.")
+        self.app.query_one(ShipStats).refresh_from_ship()
+        viewport = self.app.query_one(ViewPort)
+        viewport.selected_cargo_id = self._get_selected_cargo_id()
+        viewport.refresh_current_display()
+        self._update_comms_action_preview()
+
     def behaviour_target_action(self, option_text) -> None:
         if not self.pending_action:
             return
@@ -702,6 +1001,12 @@ class ShipControls(HorizontalGroup):
         if context_type == "jump":
             if option_text.startswith("Jump to "):
                 self.behaviour_jump(context_value)
+            return
+
+        if context_type == "cargo":
+            cargo_id = str(context_value)
+            if option_text == "Eject Cargo":
+                self._open_eject_confirmation_menu(cargo_id)
             return
 
         if context_type != "local":
@@ -723,15 +1028,14 @@ class ShipControls(HorizontalGroup):
             self.behaviour_dock(body_name)
             return
         if action_type == "extract":
-            body_name = self.ship.galaxy.get_celestial_system(self.ship.get_current_system()).members[target_id - 1].name
-            self.behaviour_extract(body_name)
+            self.behaviour_extract(target_id)
 
     def _is_cartography_active(self, viewport: ViewPort) -> bool:
         content = viewport.query_one("#viewport_content")
         if not content.children:
             return False
         active_widget = content.children[0]
-        return isinstance(active_widget, (LongRangeVisualizer, SystemVisualizer))
+        return isinstance(active_widget, (LongRangeVisualizer, SystemVisualizer, CargoVisualizer))
 
     def refresh_action_buttons(self) -> None:
         jump_ready = self.ship.has_current_system_long_range_scan()
@@ -749,6 +1053,11 @@ class ShipControls(HorizontalGroup):
         local_label.append("G", style="bold green")
         local_label.append("]oto Local Destination ", style="white")
         local_label.append(f"({local_status})", style="dim")
+
+        cargo_label = Text()
+        cargo_label.append("[", style="white")
+        cargo_label.append("C", style="bold yellow")
+        cargo_label.append("]argo Manifest", style="white")
 
         select_label = Text()
         select_label.append("[", style="white")
@@ -773,6 +1082,7 @@ class ShipControls(HorizontalGroup):
 
         self.query_one("#hint_jump", Label).update(jump_label)
         self.query_one("#hint_local", Label).update(local_label)
+        self.query_one("#hint_cargo", Label).update(cargo_label)
         self.query_one("#hint_select", Label).update(select_label)
         self.query_one("#hint_action", Label).update(action_label)
         self.query_one("#hint_save", Label).update(save_label)
@@ -799,6 +1109,19 @@ class ShipControls(HorizontalGroup):
             comms.show_action_preview(target_system.name, [f"Jump to {target_system.name}"])
             return
 
+        if viewport.display_mode == "cargo":
+            cargo_id = self._get_selected_cargo_id()
+            if cargo_id is None:
+                comms.show_action_preview("Cargo Hold", ["No cargo loaded"])
+                return
+            cargo_name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+            quantity = int(self.ship.cargo_manifest.get(cargo_id, 0))
+            comms.show_action_preview(
+                cargo_name,
+                [f"Qty: {quantity}", "Eject Cargo (1/5/10 units)"],
+            )
+            return
+
         if not self.ship.has_current_system_short_range_scan():
             comms.show_action_preview("Local Cartography", ["Run short-range scan first"])
             return
@@ -815,10 +1138,18 @@ class ShipControls(HorizontalGroup):
             preview_options.append(f"Travel to {target_body.name}")
         elif target_body.has_market:
             preview_options.append("Open Trade Console")
-        elif target_body.type in {"Planet", "Gas Giant", "Dwarf Planet", "Moon"}:
-            preview_options.extend(["Dock or Land", "Extract Resources"])
+        elif self._can_dock_or_land(target_body):
+            preview_options.append("Dock or Land")
+        elif self._can_extract_resources(target_body):
+            preview_options.append("Extract Resources")
 
         comms.show_action_preview(target_body.name, preview_options)
+
+    def _can_dock_or_land(self, body) -> bool:
+        return body.type in self.DOCKABLE_BODY_TYPES
+
+    def _can_extract_resources(self, body) -> bool:
+        return body.type in self.EXTRACTABLE_BODY_TYPES
 
     def refresh_action_preview(self) -> None:
         self._refresh_action_preview_with_retry(retries=5, delay=0.05)

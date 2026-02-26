@@ -107,8 +107,8 @@
 - [x] Add save/load game state (JSON, multi-slot)
 
 ### Phase 2: Travel Risk + Encounters
-- [ ] Add encounter generator on travel completion
-- [ ] Add hazard outcomes to stats/resources
+- [x] Add encounter generator on travel completion
+- [x] Add hazard outcomes to stats/resources
 - [ ] Add inspect/flee/engage choices
 
 ### Phase 3: Combat and AI
@@ -148,6 +148,8 @@
 - [x] Add travel encounter roll with simple outcomes.
 - [ ] Add first hostile NPC encounter (pirate) with minimal combat choice.
 - [x] Add save/load to persist progression.
+- [x] Replace placeholder extract callback with persisted resource extraction loop.
+- [x] Add cargo manifest navigation and cargo ejection actions.
 
 ## 10) Open Design Questions
 - Is the game single-captain roguelike or long campaign?
@@ -155,7 +157,7 @@
 - How simulation-heavy should markets be vs gamey and readable?
 - Should LLM be optional flavor or also drive mission structure?
 
-## 11) Current Prototype Status (2026-02-22)
+## 11) Current Prototype Status (2026-02-26)
 
 ### Implemented Foundation
 - Added station/market-oriented world scaffolding:
@@ -163,6 +165,8 @@
   - System markets are generated with commodity price/stock data.
 - Added player economy state:
   - Credits, fuel, cargo capacity, cargo manifest.
+- Added centralized market tuning config:
+  - Commodity pricing/stock/volatility values are now grouped in one source module for easier balancing.
 - Added basic fuel economy:
   - Jump/local travel consumes fuel based on distance.
   - Travel is blocked if fuel is insufficient.
@@ -184,14 +188,41 @@
   - Trade quantity picker supports `+1`, `+5`, `+10`.
   - Returning from quantity picker keeps previously selected commodity highlighted.
   - Market stock and player credits/cargo update immediately.
+- Market commodity set now includes mined materials:
+  - `iron`, `nickel`, `silver`, `gold`, `diamond`.
 - Market sorting:
   - `[T]` cycles sort modes while market list is open:
     - `NAME ↑`, `PRICE ↑`, `STOCK ↓`, `OWNED ↓`.
+
+### Implemented Extraction Loop
+- Local action gating rules:
+  - `Extract Resources` is available only on current-location `Asteroid`/`Comet`.
+  - `Dock or Land` is currently available only on current-location `Planet`/`Moon`.
+- Per-body extraction state is persisted:
+  - Asteroids/comets get randomized resource pools (`10-200` total units across random resource types).
+  - Scan/extraction state is saved and loaded with game state.
+- First extraction action performs a survey:
+  - Uses progress bar in viewport.
+  - Logs color-coded resource descriptors (`Rich`, `Medium`, `Low`, `Traces`).
+- Repeated extraction harvests resources into cargo:
+  - Random weighted composition per batch.
+  - Constrained by cargo free space and remaining deposits.
+  - Deposits can be depleted.
+
+### Implemented Cargo Manifest + Ejection
+- Added cargo navigation mode:
+  - `[C]` opens cargo manifest in viewport.
+  - Up/Down moves cargo selection.
+  - Enter opens cargo actions in `ShipComms`.
+- Cargo action flow:
+  - `Eject Cargo` -> quantity pick (`1/5/10`, availability-aware) -> confirmation.
+  - Confirmed ejection removes selected units and refreshes ship stats/action preview.
 
 ### Implemented Navigation + Cartography Flow
 - Primary navigation is keyboard-first:
   - `[J]` Jump navigation
   - `[G]` Goto local destination
+  - `[C]` Cargo manifest
   - `[T]` market sort toggle (market list only)
   - `[Ctrl+S]` save
   - `[Ctrl+L]` load
@@ -257,6 +288,6 @@
 
 ### Suggested Next Work Session
 1. Implement first hostile NPC encounter (pirate) with minimal `fight/flee` resolution.
-2. Replace placeholder `Dock/Land` and `Extract` callbacks with real resource/economy effects.
+2. Implement real `Dock/Land` gameplay state and services (currently action shell only).
 3. Add a lightweight event summary panel/history for recent travel outcomes and encounter results.
 4. Expand encounter outcomes with scan/route modifiers and reputation hooks.

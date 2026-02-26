@@ -2,14 +2,7 @@ from random import randrange
 from ..GalacticCoordinates.GalacticCoordinates import GalacticCoordinates
 from ..CelestialSystem.CelestialSystem import CelestialSystem
 from ..NameGenerator import generate_galaxy_name, generate_system_name
-
-COMMODITY_DEFS = (
-    {"id": "food", "name": "Food Rations", "base_price": 45},
-    {"id": "ore", "name": "Raw Ore", "base_price": 75},
-    {"id": "fuel", "name": "Refined Fuel", "base_price": 120},
-    {"id": "parts", "name": "Ship Parts", "base_price": 190},
-    {"id": "med", "name": "Medical Supplies", "base_price": 260},
-)
+from ..MarketConfig import MARKET_COMMODITY_DEFS
 
 class Galaxy():
 
@@ -37,6 +30,7 @@ class Galaxy():
             # Generate at least one local body so ship/local UI always has a valid target.
             new_system.generate_system(randrange(1, 16))
             self.system_markets[new_system.id] = self._generate_system_market()
+            self._ensure_market_has_all_commodities(self.system_markets[new_system.id])
     
     def get_celestial_system (self, IntSystem = 1):
         return self.celestial_systems[IntSystem-1]
@@ -82,16 +76,42 @@ class Galaxy():
 
     def _generate_system_market(self) -> dict:
         market = {}
-        for commodity in COMMODITY_DEFS:
-            volatility = randrange(-35, 46)
+        for commodity in MARKET_COMMODITY_DEFS:
+            volatility = randrange(
+                int(commodity.get("volatility_min", -35)),
+                int(commodity.get("volatility_max", 45)) + 1,
+            )
             price = max(5, commodity["base_price"] + volatility)
-            stock = randrange(8, 61)
+            stock = randrange(
+                int(commodity.get("stock_min", 8)),
+                int(commodity.get("stock_max", 60)) + 1,
+            )
             market[commodity["id"]] = {
                 "name": commodity["name"],
                 "price": price,
                 "stock": stock,
             }
         return market
+
+    def _ensure_market_has_all_commodities(self, market: dict) -> None:
+        for commodity in MARKET_COMMODITY_DEFS:
+            commodity_id = commodity["id"]
+            if commodity_id in market:
+                continue
+            volatility = randrange(
+                int(commodity.get("volatility_min", -35)),
+                int(commodity.get("volatility_max", 45)) + 1,
+            )
+            price = max(5, int(commodity["base_price"]) + volatility)
+            stock = randrange(
+                int(commodity.get("stock_min", 8)),
+                int(commodity.get("stock_max", 60)) + 1,
+            )
+            market[commodity_id] = {
+                "name": commodity["name"],
+                "price": price,
+                "stock": stock,
+            }
 
     def to_dict(self) -> dict:
         return {
@@ -138,3 +158,9 @@ class Galaxy():
                     "price": int(commodity_data.get("price", 0)),
                     "stock": int(commodity_data.get("stock", 0)),
                 }
+            self._ensure_market_has_all_commodities(self.system_markets[sid])
+        for system in self.celestial_systems:
+            if system.id not in self.system_markets:
+                self.system_markets[system.id] = self._generate_system_market()
+            else:
+                self._ensure_market_has_all_commodities(self.system_markets[system.id])

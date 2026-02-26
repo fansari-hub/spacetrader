@@ -12,6 +12,7 @@ Terminal-first space trading and navigation prototype built with Textual.
 
 - `[J]` Open jump navigation / jump actions
 - `[G]` Open local navigation / local actions
+- `[C]` Open cargo manifest / cargo actions
 - `[Up/Down]` Move selected target (or menu row when a command menu is open)
 - `[Enter]` Open/confirm action menu
 - `[Esc]` Cancel active command menu
@@ -22,7 +23,7 @@ Terminal-first space trading and navigation prototype built with Textual.
 ## UI Model
 
 - Left panel:
-  - `ViewPort`: long/local cartography and travel progress
+  - `ViewPort`: long/local cartography, cargo manifest, and travel progress
   - `ShipLog`: event and result logging
 - Right panel:
   - `ShipComms`: integrated command menu + action preview (replaces old popup menus)
@@ -42,6 +43,7 @@ Terminal-first space trading and navigation prototype built with Textual.
 
 - Open local actions at a station and select `Open Trade Console`.
 - Choose `Buy Cargo` or `Sell Cargo`.
+- Mined resources are market commodities too (`iron`, `nickel`, `silver`, `gold`, `diamond`).
 - Commodity list supports sort modes:
   - `NAME ↑`
   - `PRICE ↑`
@@ -49,6 +51,25 @@ Terminal-first space trading and navigation prototype built with Textual.
   - `OWNED ↓`
 - Select a commodity, then choose quantity (`+1`, `+5`, `+10`).
 - Returning from quantity picker keeps the previous commodity selection highlighted.
+
+## Extraction Flow
+
+- `Extract Resources` is available at current location only on `Asteroid` and `Comet`.
+- First use performs a resource survey progress pass and logs color-coded composition descriptors (`Rich`, `Medium`, `Low`, `Traces`).
+- Subsequent uses harvest random batches into cargo hold, limited by:
+  - remaining body deposits
+  - ship cargo capacity
+- Deposits persist per body and can be depleted.
+
+## Cargo Manifest
+
+- Press `[C]` to open the cargo manifest in the `ViewPort`.
+- Use `[Up/Down]` to select cargo items.
+- Press `[Enter]` for cargo actions.
+- `Eject Cargo` flow:
+  - choose quantity (`1`, `5`, `10`, based on available units)
+  - confirm ejection
+  - selected quantity is removed from cargo hold
 
 ## Notes
 
