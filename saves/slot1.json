@@ -844,10 +844,10 @@
               "y": 831
             },
             "extractable_resources": {
-              "diamond": 6,
-              "iron": 12,
-              "nickel": 49,
-              "silver": 27
+              "diamond": 5,
+              "iron": 6,
+              "nickel": 27,
+              "silver": 16
             },
             "extraction_scanned": true,
             "has_market": false,
@@ -865,7 +865,7 @@
               "y": 926
             },
             "extractable_resources": {
-              "silver": 80
+              "silver": 60
             },
             "extraction_scanned": true,
             "has_market": false,
@@ -4301,7 +4301,7 @@
         "diamond": {
           "name": "Diamond",
           "price": 467,
-          "stock": 12
+          "stock": 13
         },
         "food": {
           "name": "Food Rations",
@@ -4321,7 +4321,7 @@
         "iron": {
           "name": "Iron",
           "price": 82,
-          "stock": 48
+          "stock": 54
         },
         "med": {
           "name": "Medical Supplies",
@@ -4331,7 +4331,7 @@
         "nickel": {
           "name": "Nickel",
           "price": 112,
-          "stock": 74
+          "stock": 96
         },
         "ore": {
           "name": "Raw Ore",
@@ -4346,7 +4346,7 @@
         "silver": {
           "name": "Silver",
           "price": 144,
-          "stock": 74
+          "stock": 110
         }
       },
       "7": {
@@ -4509,17 +4509,15 @@
     "type": "galaxy"
   },
   "save_version": 1,
-  "saved_at": "2026-02-26T08:15:53+00:00",
+  "saved_at": "2026-02-26T08:27:01+00:00",
   "ship": {
     "cargo_capacity": 20,
-    "cargo_manifest": {
-      "silver": 5
-    },
-    "credits": 14981,
+    "cargo_manifest": {},
+    "credits": 23588,
     "current_localID": 9,
     "current_systemID": 6,
     "engine_power": 100,
-    "fuel": 62,
+    "fuel": 38,
     "is_docked": false,
     "lifesupport_power": 100,
     "name": "Enterprise-D",
@@ -4536,7 +4534,7 @@
     "selected_local_id": 9,
     "shields": 95,
     "structure": 98,
-    "travel_event_index": 11,
+    "travel_event_index": 18,
     "visited_locations_by_system": {
       "18": [
         11
