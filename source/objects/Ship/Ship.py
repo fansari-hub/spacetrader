@@ -20,6 +20,7 @@ class Ship():
         self.fuel = 100
         self.cargo_capacity = 20
         self.cargo_manifest = {}
+        self.cargo_avg_cost = {}
         self.name = "Enterprise-D"
         self.galaxy = galaxy
         self.scanned_long_range_systems = set()
@@ -240,7 +241,7 @@ class Ship():
 
     def buy_commodity(self, commodity_id: str, unit_price: int, quantity: int = 1) -> None:
         self.credits -= unit_price * quantity
-        self.cargo_manifest[commodity_id] = self.cargo_manifest.get(commodity_id, 0) + quantity
+        self.add_cargo(commodity_id, quantity=quantity, unit_cost=unit_price)
 
     def can_sell(self, commodity_id: str, quantity: int = 1) -> tuple[bool, str]:
         if self.cargo_manifest.get(commodity_id, 0) < quantity:
@@ -249,11 +250,34 @@ class Ship():
 
     def sell_commodity(self, commodity_id: str, unit_price: int, quantity: int = 1) -> None:
         self.credits += unit_price * quantity
-        new_qty = self.cargo_manifest.get(commodity_id, 0) - quantity
+        self.remove_cargo(commodity_id, quantity=quantity)
+
+    def add_cargo(self, commodity_id: str, quantity: int = 1, unit_cost: float = 0.0) -> None:
+        quantity = max(0, int(quantity))
+        if quantity <= 0:
+            return
+        unit_cost = float(unit_cost)
+        current_qty = int(self.cargo_manifest.get(commodity_id, 0))
+        current_avg = float(self.cargo_avg_cost.get(commodity_id, 0.0))
+        new_qty = current_qty + quantity
+        weighted_total = (current_avg * current_qty) + (unit_cost * quantity)
+        self.cargo_manifest[commodity_id] = new_qty
+        self.cargo_avg_cost[commodity_id] = weighted_total / new_qty if new_qty > 0 else 0.0
+
+    def remove_cargo(self, commodity_id: str, quantity: int = 1) -> None:
+        quantity = max(0, int(quantity))
+        if quantity <= 0:
+            return
+        current_qty = int(self.cargo_manifest.get(commodity_id, 0))
+        new_qty = current_qty - quantity
         if new_qty > 0:
             self.cargo_manifest[commodity_id] = new_qty
-        else:
-            self.cargo_manifest.pop(commodity_id, None)
+            return
+        self.cargo_manifest.pop(commodity_id, None)
+        self.cargo_avg_cost.pop(commodity_id, None)
+
+    def get_cargo_average_cost(self, commodity_id: str) -> float:
+        return float(self.cargo_avg_cost.get(commodity_id, 0.0))
 
     
     def dock(self) -> None:
@@ -276,6 +300,11 @@ class Ship():
             "fuel": self.fuel,
             "cargo_capacity": self.cargo_capacity,
             "cargo_manifest": {key: int(value) for key, value in self.cargo_manifest.items()},
+            "cargo_avg_cost": {
+                key: float(value)
+                for key, value in self.cargo_avg_cost.items()
+                if key in self.cargo_manifest
+            },
             "name": self.name,
             "scanned_long_range_systems": sorted(self.scanned_long_range_systems),
             "scanned_short_range_systems": sorted(self.scanned_short_range_systems),
@@ -304,6 +333,15 @@ class Ship():
             for commodity_id, quantity in data.get("cargo_manifest", {}).items()
             if int(quantity) > 0
         }
+        loaded_avg_cost = data.get("cargo_avg_cost", {})
+        self.cargo_avg_cost = {}
+        for commodity_id in self.cargo_manifest:
+            raw_value = loaded_avg_cost.get(commodity_id, 0.0)
+            try:
+                value = float(raw_value)
+            except (TypeError, ValueError):
+                value = 0.0
+            self.cargo_avg_cost[commodity_id] = max(0.0, value)
         self.name = data.get("name", self.name)
 
         total_systems = len(self.galaxy.celestial_systems)

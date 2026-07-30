@@ -276,7 +276,7 @@ class ShipControls(HorizontalGroup):
             return
 
         for resource_id, quantity in gains.items():
-            self.ship.cargo_manifest[resource_id] = self.ship.cargo_manifest.get(resource_id, 0) + quantity
+            self.ship.add_cargo(resource_id, quantity=quantity, unit_cost=0)
 
         message = Text("Extracted ")
         message.append(str(sum(gains.values())), style="bold green")
@@ -977,13 +977,9 @@ class ShipControls(HorizontalGroup):
             self._update_comms_action_preview()
             return
 
-        new_qty = current_qty - quantity
-        if new_qty > 0:
-            self.ship.cargo_manifest[cargo_id] = new_qty
-        else:
-            self.ship.cargo_manifest.pop(cargo_id, None)
-            if self.selected_cargo_item_id == cargo_id:
-                self.selected_cargo_item_id = None
+        self.ship.remove_cargo(cargo_id, quantity=quantity)
+        if self.selected_cargo_item_id == cargo_id and self.ship.cargo_manifest.get(cargo_id, 0) <= 0:
+            self.selected_cargo_item_id = None
 
         self.app.query_one(ShipLog).update_log(f"Ejected {quantity} unit(s) of {cargo_name}.")
         self.app.query_one(ShipStats).refresh_from_ship()

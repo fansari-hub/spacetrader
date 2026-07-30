@@ -44,16 +44,20 @@ class CargoVisualizer(Static):
 
         for cargo_id, quantity in ordered_items:
             name = MARKET_COMMODITY_NAME_BY_ID.get(cargo_id, cargo_id.title())
+            avg_cost = self.ship.get_cargo_average_cost(cargo_id)
             is_selected = cargo_id == self.selected_cargo_id
             marker = ">" if is_selected else " "
             marker_style = "bold yellow" if is_selected else "white"
             name_style = "bold yellow" if is_selected else "white"
             quantity_style = "bold yellow" if is_selected else "bold cyan"
+            avg_style = "bold yellow" if is_selected else "bold magenta"
             row = Text()
             row.append(f"{marker} ", style=marker_style)
-            row.append(f"{name:24}", style=name_style)
+            row.append(f"{name:18}", style=name_style)
             row.append(" | Qty ", style="white")
             row.append(f"{quantity:>4}", style=quantity_style)
+            row.append(" | Avg ", style="white")
+            row.append(f"{avg_cost:>7.2f} cr", style=avg_style)
             row.append(f" | id: {cargo_id}", style="dim")
             row.append("\n")
             output.append_text(row)
