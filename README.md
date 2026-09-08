@@ -86,3 +86,21 @@ Terminal-first space trading and navigation prototype built with Textual.
   - salvage opportunity (credit gain)
   - distress signal (narrative event)
 - Non-trivial encounter outcomes raise a red-highlighted `Encounter Alert` menu in `ShipComms` and require acknowledgement.
+
+## Proto2: Cinder Reach (local branch)
+
+Proto2 is a new shared-world prototype on the local `proto2` branch. It is deliberately separate from the Proto1 app.
+
+Run it with:
+
+```bash
+./.venv/bin/python source/Proto2.py
+```
+
+Controls:
+- `[S]` queue a scan order
+- `[B]` queue a purchase of two fuel units
+- `[R]` resolve a simultaneous turn (the AI trader submits through the same order model)
+- `[Q]` quit
+
+The vertical slice demonstrates deterministic seeded-sector generation, shared markets, a server-style event log, an AI captain using the same command contract, and persistent shortage situations triggered by market depletion.
